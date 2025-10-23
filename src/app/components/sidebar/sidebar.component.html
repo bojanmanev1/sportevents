@@ -1,0 +1,45 @@
+<mat-card class="sidebar-card">
+  <h3>Filter by Location</h3>
+
+  <mat-form-field appearance="outline" class="sidebar-field">
+    <mat-label>Location</mat-label>
+    <input
+      matInput
+      placeholder="Enter city or region"
+      [(ngModel)]="location"
+    />
+    <mat-icon matSuffix>place</mat-icon>
+  </mat-form-field>
+
+  <div class="distance-section">
+    <label>Distance (km)</label>
+    <mat-slider
+      min="10"
+      max="200"
+      step="10"
+      [(ngModel)]="distance"
+      thumbLabel
+    ></mat-slider>
+    <div class="distance-value">{{ distance }} km</div>
+  </div>
+
+  <button
+    mat-flat-button
+    color="primary"
+    class="search-button"
+    (click)="onSearch()"
+  >
+    <mat-icon>search</mat-icon>
+    Search
+  </button>
+
+  <div class="divider"></div>
+
+  <h4>Events nearby</h4>
+  <div class="event-list">
+    <div class="event-item" *ngFor="let event of [1, 2, 3, 4]">
+      <mat-icon>emoji_events</mat-icon>
+      <span>Sample Event {{ event }}</span>
+    </div>
+  </div>
+</mat-card>

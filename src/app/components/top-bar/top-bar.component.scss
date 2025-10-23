@@ -1,0 +1,66 @@
+.top-bar {
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #0d0d0d, #1e1e1e);
+  color: #eaeaea;
+  padding: 0 1rem;
+  height: 64px;
+  overflow: hidden;
+
+  .logo-section {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .app-title {
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: #00bfa5; // Accent color
+    }
+
+    mat-icon {
+      color: #00bfa5;
+    }
+  }
+
+  .events-ticker {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    margin: 0 1rem;
+
+    .ticker-content {
+      display: flex;
+      gap: 2rem;
+      animation: scroll-left 20s linear infinite;
+
+      .event-item {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        color: #ccc;
+        white-space: nowrap;
+        font-size: 0.9rem;
+
+        mat-icon {
+          font-size: 16px;
+          color: #00bfa5;
+        }
+      }
+    }
+  }
+
+  .info-btn {
+    color: #eaeaea;
+  }
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}

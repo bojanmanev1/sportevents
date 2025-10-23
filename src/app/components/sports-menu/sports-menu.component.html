@@ -1,0 +1,16 @@
+<div class="sports-menu">
+  <mat-button-toggle-group
+    class="sports-toggle-group"
+    [(ngModel)]="selectedSport"
+    (change)="selectSport(selectedSport)"
+  >
+    <mat-button-toggle
+      *ngFor="let sport of sports"
+      [value]="sport.name"
+      class="sport-button"
+    >
+      <mat-icon>{{ sport.icon }}</mat-icon>
+      <span>{{ sport.name }}</span>
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+</div>

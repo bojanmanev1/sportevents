@@ -1,0 +1,19 @@
+<mat-toolbar color="primary" class="top-bar">
+  <div class="logo-section">
+    <mat-icon>sports_soccer</mat-icon>
+    <span class="app-title">SportEvents</span>
+  </div>
+
+  <div class="events-ticker">
+    <div class="ticker-content">
+      <div *ngFor="let event of upcomingEvents" class="event-item">
+        <mat-icon>event</mat-icon>
+        <span>{{ event.name }} — {{ event.location }} ({{ event.date }})</span>
+      </div>
+    </div>
+  </div>
+
+  <button mat-icon-button class="info-btn" aria-label="About">
+    <mat-icon>info_outline</mat-icon>
+  </button>
+</mat-toolbar>

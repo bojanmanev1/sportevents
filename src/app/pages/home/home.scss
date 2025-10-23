@@ -1,0 +1,27 @@
+.main-layout {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 1rem 2rem;
+  gap: 2rem;
+
+  .grid-area {
+    flex: 1;
+    max-width: 1000px;
+  }
+
+  .sidebar-area {
+    width: 280px;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    align-items: center;
+
+    .sidebar-area {
+      width: 100%;
+      max-width: 400px;
+    }
+  }
+}

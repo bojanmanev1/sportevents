@@ -1,0 +1,45 @@
+.sports-menu {
+  background: linear-gradient(90deg, #0d0d0d, #1e1e1e);
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #222;
+}
+
+.sports-toggle-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+
+  .sport-button {
+    color: #eaeaea;
+    background: #1e1e1e;
+    border-radius: 8px;
+    border: 1px solid #333;
+    text-transform: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+
+    mat-icon {
+      font-size: 18px;
+      margin-right: 4px;
+      color: #00bfa5;
+    }
+
+    &:hover {
+      background: rgba(0, 191, 165, 0.1);
+      border-color: #00bfa5;
+    }
+
+    &.mat-button-toggle-checked {
+      background: #00bfa5;
+      color: #121212;
+
+      mat-icon {
+        color: #121212;
+      }
+    }
+  }
+}
