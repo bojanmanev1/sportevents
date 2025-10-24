@@ -11,17 +11,7 @@
     <mat-icon matSuffix>place</mat-icon>
   </mat-form-field>
 
-  <div class="distance-section">
-    <label>Distance (km)</label>
-    <mat-slider
-      min="10"
-      max="200"
-      step="10"
-      [(ngModel)]="distance"
-      thumbLabel
-    ></mat-slider>
-    <div class="distance-value">{{ distance }} km</div>
-  </div>
+
 
   <button
     mat-flat-button
@@ -35,11 +25,15 @@
 
   <div class="divider"></div>
 
+  <mat-nav-list class="event-list">
   <h4>Events nearby</h4>
-  <div class="event-list">
-    <div class="event-item" *ngFor="let event of [1, 2, 3, 4]">
-      <mat-icon>emoji_events</mat-icon>
-      <span>Sample Event {{ event }}</span>
-    </div>
-  </div>
+  <a class="event-item"
+    mat-list-item
+    *ngFor="let t of tournaments"
+    (click)="openTournamentDialog(t)"
+  >
+    <span matLine>{{ t.name }}</span>
+    <span matLine class="secondary">{{ t.location }} • {{ t.sport }}</span>
+  </a>
+</mat-nav-list>
 </mat-card>

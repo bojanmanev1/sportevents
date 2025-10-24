@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 interface EventItem {
   name: string;
@@ -31,6 +32,7 @@ interface EventItem {
   styleUrls: ['./events-grid.component.scss'],
 })
 export class EventsGridComponent {
+   constructor(private router: Router) {}
   searchText = '';
   displayedColumns = ['name', 'sport', 'registration', 'startDate', 'location'];
 
@@ -69,5 +71,9 @@ export class EventsGridComponent {
     return this.events.filter(e =>
       e.name.toLowerCase().includes(this.searchText.toLowerCase())
     );
+  }
+
+    openDetails(eventId: number) {
+    this.router.navigate(['/tournament', eventId]);
   }
 }

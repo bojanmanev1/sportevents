@@ -1,0 +1,23 @@
+.details-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.details-card {
+  width: 600px;
+  background-color: #1e1e1e;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+}
+
+.map-placeholder {
+  margin-top: 1rem;
+  background-color: #333;
+  color: #ccc;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+}

@@ -1,0 +1,23 @@
+<div class="details-container">
+  <mat-card class="details-card">
+    <mat-card-header>
+      <mat-card-title>{{ tournament.name }}</mat-card-title>
+      <mat-card-subtitle>{{ tournament.sport }} • {{ tournament.location }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <p><strong>Start Date:</strong> {{ tournament.startDate }}</p>
+      <p><strong>Registration:</strong> {{ tournament.registrationStatus }}</p>
+      <p><strong>Prize:</strong> {{ tournament.prize }}</p>
+      <p>{{ tournament.description }}</p>
+
+      <div class="map-placeholder">
+        🗺️ Map placeholder (Leaflet will go here later)
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-button (click)="goBack()">Back</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
