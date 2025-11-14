@@ -3,6 +3,7 @@ body {
   height: 100%;
   margin: 0;
   background-color: #0e0e0e; // deep dark background
+
   color: #eaeaea;
   font-family: Roboto, sans-serif;
 }
@@ -12,4 +13,28 @@ app-root {
   flex-direction: column;
   min-height: 100vh;
   background-color: #0e0e0e;
+
+}
+/* src/styles.scss (global) */
+
+.cdk-overlay-backdrop,
+.cdk-global-overlay-wrapper .cdk-overlay-backdrop,
+.mat-mdc-backdrop,
+.mat-overlay-backdrop {
+  backdrop-filter: blur(10px) !important;           /* blur amount */
+  -webkit-backdrop-filter: blur(10px) !important;
+  background-color: rgba(0, 0, 0, 0.55) !important; /* darkness / opacity */
+  transition: backdrop-filter 0.25s ease, background-color 0.25s ease;
+}
+
+/* optional small dialog intro animation */
+.cdk-overlay-pane,
+.mat-mdc-overlay-pane {
+  transform-origin: center;
+  animation: dialog-zoom-in 0.22s ease;
+}
+
+@keyframes dialog-zoom-in {
+  from { transform: scale(.98); opacity:.7; }
+  to   { transform: scale(1);    opacity:1;   }
 }

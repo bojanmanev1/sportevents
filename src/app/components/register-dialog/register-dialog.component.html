@@ -1,0 +1,25 @@
+<h2 mat-dialog-title class="dialog-title">
+  Register for {{ data.tournament.name }}
+</h2>
+
+<div mat-dialog-content class="form-content">
+  <mat-form-field appearance="outline">
+    <mat-label>Name</mat-label>
+    <input matInput [(ngModel)]="formData.name" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Surname</mat-label>
+    <input matInput [(ngModel)]="formData.surname" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Mobile Phone</mat-label>
+    <input matInput [(ngModel)]="formData.phone" type="tel" />
+  </mat-form-field>
+</div>
+
+<div mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-button (click)="closeDialog()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="submitForm()">Send</button>
+</div>

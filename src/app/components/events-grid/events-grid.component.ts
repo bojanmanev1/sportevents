@@ -6,13 +6,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { TournamentDetailsDialogComponent } from '../tournament-details-dialog/tournament-details-dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 interface EventItem {
   name: string;
   sport: string;
+  discipline: string;
   registration: 'Open' | 'Closed';
-  startDate: string;
   location: string;
 }
 
@@ -32,37 +33,38 @@ interface EventItem {
   styleUrls: ['./events-grid.component.scss'],
 })
 export class EventsGridComponent {
-   constructor(private router: Router) {}
+  constructor(private dialog: MatDialog) {}
+
   searchText = '';
-  displayedColumns = ['name', 'sport', 'registration', 'startDate', 'location'];
+  displayedColumns = ['name', 'sport', 'discipline', 'location', 'registration'];
 
   events: EventItem[] = [
     {
       name: 'Skopje Summer Cup',
       sport: 'Football',
+      discipline: '5v5',
       registration: 'Open',
-      startDate: '2025-11-02',
       location: 'Skopje',
     },
     {
       name: 'Bitola Basketball Fest',
       sport: 'Basketball',
+      discipline: 'Streetball',
       registration: 'Closed',
-      startDate: '2025-10-25',
       location: 'Bitola',
     },
     {
       name: 'Ohrid Tennis Masters',
       sport: 'Tennis',
+      discipline: 'Singles',
       registration: 'Open',
-      startDate: '2025-11-10',
       location: 'Ohrid',
     },
     {
       name: '3x3 Street Challenge',
-      sport: '3x3',
+      sport: 'Basketball',
+      discipline: '3x3',
       registration: 'Open',
-      startDate: '2025-10-29',
       location: 'Tetovo',
     },
   ];
@@ -73,7 +75,10 @@ export class EventsGridComponent {
     );
   }
 
-    openDetails(eventId: number) {
-    this.router.navigate(['/tournament', eventId]);
+   openTournamentDialog(tournament: any) {
+    this.dialog.open(TournamentDetailsDialogComponent, {
+      width: '500px',
+      data: tournament
+    });
   }
 }

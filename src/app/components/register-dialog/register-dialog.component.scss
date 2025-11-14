@@ -1,0 +1,81 @@
+:host {
+  display: block;
+  background: #1e1e1e;
+  color: #e0e0e0;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  padding: 1.5rem;
+}
+
+.dialog-title {
+  color: #00bcd4;
+  font-weight: 600;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.5rem;
+}
+
+.form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0.5rem 0;
+
+  mat-form-field {
+    width: 100%;
+
+    .mat-mdc-form-field-subscript-wrapper {
+      color: #aaa;
+    }
+
+    .mat-mdc-text-field-wrapper {
+      background-color: #2a2a2a !important;
+      border-radius: 10px;
+    }
+
+    input {
+      color: #eaeaea;
+    }
+
+    mat-label {
+      color: #b0bec5;
+    }
+
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__trailing,
+    .mdc-notched-outline__notch {
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+  }
+}
+
+.dialog-actions {
+  margin-top: 1.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+
+  button[mat-raised-button] {
+    background-color: #00bcd4;
+    color: #121212;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 0.4rem 1.2rem;
+
+    &:hover {
+      background-color: #26c6da;
+    }
+  }
+
+  button[mat-button] {
+    color: #b0bec5;
+    font-weight: 500;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+}

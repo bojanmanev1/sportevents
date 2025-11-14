@@ -13,18 +13,61 @@ import { FormsModule } from '@angular/forms';
 })
 export class SportsMenuComponent {
   sports = [
-    { name: 'Football', icon: 'sports_soccer' },
+    { name: 'All', icon: 'emoji_events' },
+    { name: 'Animal Sports', icon: 'pets' },
+    { name: 'Athletics', icon: 'directions_run' },
+    { name: 'Badminton', icon: 'sports_tennis' },
     { name: 'Basketball', icon: 'sports_basketball' },
+    { name: 'Billiard', icon: 'sports' },
+    { name: 'Board Sports', icon: 'surfing' },
+    { name: 'Bowling', icon: 'sports' },
+    { name: 'Climbing', icon: 'terrain' },
+    { name: 'Combat Sports', icon: 'sports_mma' },
+    { name: 'Cycling', icon: 'directions_bike' },
+    { name: 'ESports', icon: 'sports_esports' },
+    { name: 'Football', icon: 'sports_soccer' },
+    { name: 'Golf', icon: 'sports_golf' },
+    { name: 'Gymnastics', icon: 'self_improvement' },
+    { name: 'Handball', icon: 'sports_handball' },
+    { name: 'Hiking', icon: 'hiking' },
+    { name: 'Ice Sports', icon: 'ac_unit' },
+    { name: 'Padel', icon: 'sports_tennis' },
+    { name: 'Parasports', icon: 'accessible' },
+    { name: 'Racing', icon: 'sports_motorsports' },
+    { name: 'Rugby', icon: 'sports_rugby' },
     { name: 'Tennis', icon: 'sports_tennis' },
+    { name: 'Teqball', icon: 'sports' },
     { name: 'Volleyball', icon: 'sports_volleyball' },
-    { name: '3x3', icon: 'sports' },
-    { name: 'Running', icon: 'directions_run' },
+    { name: 'Water Sports', icon: 'pool' },
+    { name: 'Weapons', icon: 'sports_kabaddi' },
   ];
 
-  selectedSport = 'Football';
+selectedSports: string[] = ['All'];
 
   selectSport(sport: string) {
-    this.selectedSport = sport;
-    // later you can emit an event or filter events here
+    if (sport === 'All') {
+      // If "All" clicked → reset selection to only "All"
+      this.selectedSports = ['All'];
+      return;
+    }
+
+    // Remove "All" if another sport is selected
+    this.selectedSports = this.selectedSports.filter(s => s !== 'All');
+
+    // Toggle individual sport
+    if (this.selectedSports.includes(sport)) {
+      this.selectedSports = this.selectedSports.filter(s => s !== sport);
+    } else {
+      this.selectedSports.push(sport);
+    }
+
+    // If nothing is selected, revert back to "All"
+    if (this.selectedSports.length === 0) {
+      this.selectedSports = ['All'];
+    }
+  }
+
+  isSelected(sport: string): boolean {
+    return this.selectedSports.includes(sport);
   }
 }

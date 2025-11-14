@@ -1,9 +1,11 @@
 import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute } from '@angular/router';
+import { RegisterDialogComponent } from '../register-dialog/register-dialog.component';
+
 @Component({
   selector: 'app-tournament-details-dialog',
   standalone: true,
@@ -16,7 +18,8 @@ export class TournamentDetailsDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<TournamentDetailsDialogComponent>,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dialog: MatDialog
   ) {}
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -33,7 +36,13 @@ export class TournamentDetailsDialogComponent {
         'Join the best street basketball teams in the country for an exciting weekend event. Teams from across the region will compete in knockout format. Music, food, and entertainment on site!'
     };
   }
-
+    openRegisterDialog() {
+    this.dialog.open(RegisterDialogComponent, {
+      data: { tournament: this.tournament },
+      width: '400px',
+      panelClass: 'custom-dialog-container'
+    });
+  }
   close() {
     this.dialogRef.close();
   }
