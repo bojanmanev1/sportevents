@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,6 +8,8 @@ import { MatCardModule } from '@angular/material/card';
 import { FormsModule } from '@angular/forms';
 import { TournamentDetailsDialogComponent } from '../tournament-details-dialog/tournament-details-dialog';
 import { MatDialog } from '@angular/material/dialog';
+import { TournamentService, Tournament } from '../../services/tournament.service';
+import { Observable } from 'rxjs';
 
 interface EventItem {
   name: string;
@@ -33,49 +35,37 @@ interface EventItem {
   styleUrls: ['./events-grid.component.scss'],
 })
 export class EventsGridComponent {
-  constructor(private dialog: MatDialog) {}
-
+  constructor(private dialog: MatDialog, private svc: TournamentService) {}
+ @Input() selectedSports: string[] = ['All'];
+ 
   searchText = '';
   displayedColumns = ['name', 'sport', 'discipline', 'location', 'registration'];
 
-  events: EventItem[] = [
-    {
-      name: 'Skopje Summer Cup',
-      sport: 'Football',
-      discipline: '5v5',
-      registration: 'Open',
-      location: 'Skopje',
-    },
-    {
-      name: 'Bitola Basketball Fest',
-      sport: 'Basketball',
-      discipline: 'Streetball',
-      registration: 'Closed',
-      location: 'Bitola',
-    },
-    {
-      name: 'Ohrid Tennis Masters',
-      sport: 'Tennis',
-      discipline: 'Singles',
-      registration: 'Open',
-      location: 'Ohrid',
-    },
-    {
-      name: '3x3 Street Challenge',
-      sport: 'Basketball',
-      discipline: '3x3',
-      registration: 'Open',
-      location: 'Tetovo',
-    },
-  ];
+  events: Tournament[] = [];
 
-  get filteredEvents() {
-    return this.events.filter(e =>
-      e.name.toLowerCase().includes(this.searchText.toLowerCase())
-    );
+  ngOnInit() {
+    this.svc.list().subscribe(tournaments => {
+      this.events = tournaments;
+    });
   }
 
-   openTournamentDialog(tournament: any) {
+get filteredEvents() {
+  let list = this.events;
+
+  if (!this.selectedSports.includes('All')) {
+    list = list.filter(e => this.selectedSports.includes(e.sport));
+  }
+
+  return list.filter(e =>
+    e.name.toLowerCase().includes(this.searchText.toLowerCase())
+  );
+}
+
+onSportsChanged(sports: string[]) {
+  this.selectedSports = sports;
+}
+
+  openTournamentDialog(tournament: any) {
     this.dialog.open(TournamentDetailsDialogComponent, {
       width: '500px',
       data: tournament

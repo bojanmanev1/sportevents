@@ -50,7 +50,7 @@
       <tr
         mat-row
         *matRowDef="let row; columns: displayedColumns"
-        (click)="openTournamentDialog(1)"
+        (click)="openTournamentDialog(row)"
         class="clickable-row"
       ></tr>
     </table>

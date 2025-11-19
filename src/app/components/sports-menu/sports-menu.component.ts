@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,6 +12,8 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./sports-menu.component.scss'],
 })
 export class SportsMenuComponent {
+  @Output() sportFilterChanged = new EventEmitter<string[]>();
+  
   sports = [
     { name: 'All', icon: 'emoji_events' },
     { name: 'Animal Sports', icon: 'pets' },
@@ -42,29 +44,28 @@ export class SportsMenuComponent {
     { name: 'Weapons', icon: 'sports_kabaddi' },
   ];
 
-selectedSports: string[] = ['All'];
+ selectedSports: string[] = ['All'];
 
   selectSport(sport: string) {
     if (sport === 'All') {
-      // If "All" clicked → reset selection to only "All"
       this.selectedSports = ['All'];
+      this.sportFilterChanged.emit(this.selectedSports);
       return;
     }
 
-    // Remove "All" if another sport is selected
     this.selectedSports = this.selectedSports.filter(s => s !== 'All');
 
-    // Toggle individual sport
     if (this.selectedSports.includes(sport)) {
       this.selectedSports = this.selectedSports.filter(s => s !== sport);
     } else {
       this.selectedSports.push(sport);
     }
 
-    // If nothing is selected, revert back to "All"
     if (this.selectedSports.length === 0) {
       this.selectedSports = ['All'];
     }
+
+    this.sportFilterChanged.emit(this.selectedSports);
   }
 
   isSelected(sport: string): boolean {

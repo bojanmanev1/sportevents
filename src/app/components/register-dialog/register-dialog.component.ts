@@ -1,50 +1,50 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { Firestore, collection, addDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-register-dialog',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
+  imports: [CommonModule, MatDialogContent, MatDialogActions, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
   templateUrl: './register-dialog.component.html',
   styleUrls: ['./register-dialog.component.scss']
 })
 export class RegisterDialogComponent {
-  formData = {
-    name: '',
-    surname: '',
-    phone: ''
-  };
+  name = '';
+  surname = '';
+  phone = '';
+
 
   constructor(
+    private firestore: Firestore,
     public dialogRef: MatDialogRef<RegisterDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
-  submitForm() {
-    if (!this.formData.name || !this.formData.surname || !this.formData.phone) {
-      alert('Please fill in all fields');
-      return;
-    }
+   async submit() {
+    if (!this.name || !this.surname || !this.phone) return;
 
-    // Option 1: Send via backend API (recommended)
-    // this.http.post('/api/send-mail', this.formData).subscribe(...)
+    const registrationsCol = collection(this.firestore, 'registrations');
 
-    // Option 2: Temporary mailto link (simple fallback)
-    const subject = encodeURIComponent(`Tournament Registration: ${this.data.tournament.name}`);
-    const body = encodeURIComponent(
-      `Name: ${this.formData.name}\nSurname: ${this.formData.surname}\nPhone: ${this.formData.phone}`
-    );
-    window.location.href = `mailto:youremail@example.com?subject=${subject}&body=${body}`;
+    await addDoc(registrationsCol, {
+      tournamentName: this.data.tournament.name,
+      sport: this.data.tournament.sport,
+      discipline: this.data.tournament.discipline,
+      userName: this.name,
+      userSurname: this.surname,
+      phone: this.phone,
+      createdAt: new Date().toISOString()
+    });
 
-    this.dialogRef.close(this.formData);
+    this.dialogRef.close(true);
   }
 
-  closeDialog() {
-    this.dialogRef.close();
+  close() {
+    this.dialogRef.close(false);
   }
 }

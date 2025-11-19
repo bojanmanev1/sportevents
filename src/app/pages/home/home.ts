@@ -11,4 +11,12 @@ import { SidebarComponent } from '../../components/sidebar/sidebar.component';
   templateUrl: './home.html',
   styleUrls: ['./home.scss'],
 })
-export class Home {}
+export class Home {
+
+ selectedSports: string[] = ['All'];  // <-- required for grid input
+
+  onSportsChanged(sports: string[]) {  // <-- required for menu output
+    this.selectedSports = sports;
+  }
+
+}

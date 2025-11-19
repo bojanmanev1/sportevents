@@ -1,8 +1,8 @@
 <app-top-bar></app-top-bar>
-<app-sports-menu></app-sports-menu>
+<app-sports-menu (sportFilterChanged)="onSportsChanged($event)"></app-sports-menu>
 <div class="main-layout">
   <div class="grid-area">
-    <app-events-grid></app-events-grid>
+    <app-events-grid [selectedSports]="selectedSports"></app-events-grid>
   </div>
 
   <div class="sidebar-area">
