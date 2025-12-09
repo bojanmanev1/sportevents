@@ -1,3 +1,5 @@
+@import "leaflet/dist/leaflet.css";
+
 html,
 body {
   height: 100%;
@@ -37,4 +39,7 @@ app-root {
 @keyframes dialog-zoom-in {
   from { transform: scale(.98); opacity:.7; }
   to   { transform: scale(1);    opacity:1;   }
+}
+.leaflet-control-attribution {
+  display: none !important;
 }

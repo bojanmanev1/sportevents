@@ -39,7 +39,7 @@ export class EventsGridComponent {
  @Input() selectedSports: string[] = ['All'];
  
   searchText = '';
-  displayedColumns = ['name', 'sport', 'discipline', 'location', 'registration'];
+  displayedColumns = ['name', 'sport', 'discipline', 'location', 'registration','startDate'];
 
   events: Tournament[] = [];
 
@@ -52,14 +52,28 @@ export class EventsGridComponent {
 get filteredEvents() {
   let list = this.events;
 
+  // 1. Filter by sport menu
   if (!this.selectedSports.includes('All')) {
     list = list.filter(e => this.selectedSports.includes(e.sport));
   }
 
-  return list.filter(e =>
-    e.name.toLowerCase().includes(this.searchText.toLowerCase())
-  );
+  // 2. Global text filter across all columns
+  const text = this.searchText.toLowerCase().trim();
+
+  if (!text) return list;
+
+  return list.filter(e => {
+    return (
+      (e.name ?? '').toLowerCase().includes(text) ||
+      (e.sport ?? '').toLowerCase().includes(text) ||
+      (e.discipline ?? '').toLowerCase().includes(text) ||
+      (e.location ?? '').toLowerCase().includes(text) ||
+      (e.registration ?? '').toLowerCase().includes(text) ||
+      (e.startDate ?? '').toLowerCase().includes(text)
+    );
+  });
 }
+
 
 onSportsChanged(sports: string[]) {
   this.selectedSports = sports;

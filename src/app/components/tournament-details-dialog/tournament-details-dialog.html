@@ -6,16 +6,14 @@
     </mat-card-header>
 
     <mat-card-content>
-      <p><strong>Start Date:</strong> {{ tournament.startDate }}</p>
+      <p><strong>Discipline:</strong> {{ tournament.discipline }}</p>
       <p><strong>Registration:</strong> {{ tournament.registration }}</p>
       <p><strong>Prize:</strong> {{ tournament.prize }}</p>
-      <p><strong>Discipline:</strong> {{ tournament.discipline }}</p>
+      <p><strong>Start Date:</strong> {{ tournament.startDate }}</p>
 
       <p>{{ tournament.description }}</p>
 
-      <div class="map-placeholder">
-        🗺️ Map placeholder (Leaflet will go here later)
-      </div>
+   <div class="map-placeholder" #mapContainer></div>
     </mat-card-content>
     
   <mat-card-actions>

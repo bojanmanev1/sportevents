@@ -55,6 +55,9 @@ table {
   &.closed {
     color: #ff5252;
   }
+  &.notOpenYet {
+    color: #ff820c;
+  }
 }
 .clickable-row {
   height: 45px;

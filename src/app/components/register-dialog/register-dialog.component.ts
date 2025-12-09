@@ -16,7 +16,6 @@ import { Firestore, collection, addDoc } from '@angular/fire/firestore';
 })
 export class RegisterDialogComponent {
   name = '';
-  surname = '';
   phone = '';
 
 
@@ -27,7 +26,7 @@ export class RegisterDialogComponent {
   ) {}
 
    async submit() {
-    if (!this.name || !this.surname || !this.phone) return;
+    if (!this.name || !this.phone) return;
 
     const registrationsCol = collection(this.firestore, 'registrations');
 
@@ -36,7 +35,6 @@ export class RegisterDialogComponent {
       sport: this.data.tournament.sport,
       discipline: this.data.tournament.discipline,
       userName: this.name,
-      userSurname: this.surname,
       phone: this.phone,
       createdAt: new Date().toISOString()
     });

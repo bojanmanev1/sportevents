@@ -23,7 +23,7 @@ export class SportsMenuComponent {
     { name: 'Billiard', icon: 'sports' },
     { name: 'Board Sports', icon: 'surfing' },
     { name: 'Bowling', icon: 'sports' },
-    { name: 'Climbing', icon: 'terrain' },
+    { name: 'Mountain Sports', icon: 'terrain' },
     { name: 'Combat Sports', icon: 'sports_mma' },
     { name: 'Cycling', icon: 'directions_bike' },
     { name: 'ESports', icon: 'sports_esports' },
@@ -42,6 +42,7 @@ export class SportsMenuComponent {
     { name: 'Volleyball', icon: 'sports_volleyball' },
     { name: 'Water Sports', icon: 'pool' },
     { name: 'Weapons', icon: 'sports_kabaddi' },
+    { name: 'Ping Pong', icon:'sports_tennis'}
   ];
 
  selectedSports: string[] = ['All'];

@@ -25,6 +25,11 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
+               {
+    "glob": "**/*",
+    "input": "src/assets",
+    "output": "assets"
+  },
               {
                 "glob": "**/*",
                 "input": "public"
@@ -37,16 +42,6 @@
           "configurations": {
             "production": {
               "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
-                }
               ],
               "outputHashing": "all"
             },
@@ -83,6 +78,11 @@
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
+               {
+    "glob": "**/*",
+    "input": "src/assets",
+    "output": "assets"
+  },
               {
                 "glob": "**/*",
                 "input": "public"
