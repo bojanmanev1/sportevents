@@ -4,11 +4,15 @@
     <span class="app-title">Turniri.mk</span>
   </div>
 
-  <div class="events-ticker">
+  <div class="events-ticker" *ngIf="upcomingEvents.length">
     <div class="ticker-content">
-      <div *ngFor="let event of upcomingEvents" class="event-item">
+      <div *ngFor="let event of upcomingEvents" class="event-item" (click)="openTournament(event)">
         <mat-icon>event</mat-icon>
-        <span>{{ event.name }} — {{ event.location }} ({{ event.date }})</span>
+        <span>
+          {{ event.name }}
+          — {{ event.location }}
+          ({{ event.startDate }})
+        </span>
       </div>
     </div>
   </div>

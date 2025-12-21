@@ -6,7 +6,7 @@
   color: #eaeaea;
 
   padding: 0 1rem;
-  height: 64px;
+  height: 80px;
   overflow: hidden;
 
   .logo-section {
@@ -26,30 +26,50 @@
   }
 
   .events-ticker {
-    flex: 1;
-    overflow: hidden;
-    position: relative;
-    margin: 0 1rem;
+   flex: 1;
+  overflow: hidden;
+  position: relative;
+  margin: 0 1rem;
 
     .ticker-content {
-      display: flex;
-      gap: 2rem;
-      animation: scroll-left 20s linear infinite;
+         display: inline-flex;
+    align-items: center;
+    gap: 2rem;
+
+    white-space: nowrap;
+    will-change: transform;
+    pointer-events: auto; 
+    animation: ticker-scroll 25s linear infinite;
 
       .event-item {
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-        color: #ccc;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #ccc;
 
-        white-space: nowrap;
-        font-size: 0.9rem;
+  white-space: nowrap;
+  font-size: 1.1rem;
 
-        mat-icon {
-          font-size: 16px;
-          color: #00bfa5;
-        }
-      }
+  cursor: pointer;          // 👈 clickable
+  user-select: none;        // 👈 cleaner interaction
+  transition: color 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    color: #00bfa5;         // 👈 accent on hover
+    transform: translateY(-1px);
+
+    span {
+      text-decoration: underline;
+    }
+  }
+
+  mat-icon {
+    font-size: 24px;
+    color: #00bfa5;
+  }
+}
+
+ 
     }
   }
 
@@ -58,11 +78,26 @@
   }
 }
 
-@keyframes scroll-left {
+@keyframes ticker-scroll {
   0% {
-    transform: translateX(0);
+    transform: translateX(100%);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translateX(-100%);
   }
+  
+}
+
+.events-ticker {
+  pointer-events: auto;
+}
+
+.ticker-content {
+  pointer-events: auto;
+}
+
+.events-ticker:hover .ticker-content,
+.ticker-content:hover {
+  animation:none;
+  animation-play-state: paused;
 }

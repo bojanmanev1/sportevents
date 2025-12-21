@@ -8,7 +8,7 @@
     <mat-card-content>
       <p><strong>Discipline:</strong> {{ tournament.discipline }}</p>
       <p><strong>Registration:</strong> {{ tournament.registration }}</p>
-      <p><strong>Prize:</strong> {{ tournament.prize }}</p>
+      <p><strong>Fee:</strong> {{ tournament.prize }}</p>
       <p><strong>Start Date:</strong> {{ tournament.startDate }}</p>
 
       <p>{{ tournament.description }}</p>
@@ -18,7 +18,7 @@
     
   <mat-card-actions>
       <button mat-raised-button color="primary" (click)="openRegisterDialog()">
-        Register
+        Show Interest
       </button>
        <button mat-button (click)="close()">Back</button>
     </mat-card-actions>

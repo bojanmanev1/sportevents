@@ -1,23 +1,25 @@
-import { Component, Input } from '@angular/core';
+import {
+  Component,
+  Input,
+  ViewChild,
+  AfterViewInit,
+  OnInit,
+  OnChanges,
+  SimpleChanges
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
+import { FormsModule } from '@angular/forms';
+
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
-import { FormsModule } from '@angular/forms';
-import { TournamentDetailsDialogComponent } from '../tournament-details-dialog/tournament-details-dialog';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
-import { TournamentService, Tournament } from '../../services/tournament.service';
-import { Observable } from 'rxjs';
 
-interface EventItem {
-  name: string;
-  sport: string;
-  discipline: string;
-  registration: 'Open' | 'Closed';
-  location: string;
-}
+import { TournamentDetailsDialogComponent } from '../tournament-details-dialog/tournament-details-dialog';
+import { TournamentService, Tournament } from '../../services/tournament.service';
 
 @Component({
   selector: 'app-events-grid',
@@ -30,58 +32,98 @@ interface EventItem {
     MatInputModule,
     MatIconModule,
     MatCardModule,
+    MatSortModule
   ],
   templateUrl: './events-grid.component.html',
   styleUrls: ['./events-grid.component.scss'],
 })
-export class EventsGridComponent {
-  constructor(private dialog: MatDialog, private svc: TournamentService) {}
- @Input() selectedSports: string[] = ['All'];
- 
+export class EventsGridComponent
+  implements OnInit, AfterViewInit, OnChanges {
+
+  constructor(
+    private dialog: MatDialog,
+    private svc: TournamentService
+  ) {}
+
+  @Input() selectedSports: string[] = ['All'];
+
+  @ViewChild(MatSort) sort!: MatSort;
+
   searchText = '';
-  displayedColumns = ['name', 'sport', 'discipline', 'location', 'registration','startDate'];
+  displayedColumns = [
+    'name',
+    'sport',
+    'discipline',
+    'location',
+    'registration',
+    'startDate'
+  ];
 
-  events: Tournament[] = [];
+  dataSource = new MatTableDataSource<Tournament>([]);
 
-  ngOnInit() {
-    this.svc.list().subscribe(tournaments => {
-      this.events = tournaments;
-    });
-  }
-
-get filteredEvents() {
-  let list = this.events;
-
-  // 1. Filter by sport menu
-  if (!this.selectedSports.includes('All')) {
-    list = list.filter(e => this.selectedSports.includes(e.sport));
-  }
-
-  // 2. Global text filter across all columns
-  const text = this.searchText.toLowerCase().trim();
-
-  if (!text) return list;
-
-  return list.filter(e => {
-    return (
-      (e.name ?? '').toLowerCase().includes(text) ||
-      (e.sport ?? '').toLowerCase().includes(text) ||
-      (e.discipline ?? '').toLowerCase().includes(text) ||
-      (e.location ?? '').toLowerCase().includes(text) ||
-      (e.registration ?? '').toLowerCase().includes(text) ||
-      (e.startDate ?? '').toLowerCase().includes(text)
-    );
+ ngOnInit() {
+  this.svc.getAll().subscribe(tournaments => {
+    this.dataSource.data = tournaments;
+    this.applyFilters();
   });
 }
 
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
 
-onSportsChanged(sports: string[]) {
-  this.selectedSports = sports;
-}
+    // ✅ Proper date sorting
+this.dataSource.sortingDataAccessor = (item, property) => {
+  if (property === 'startDate') {
+    if (!item.startDate) return 0;
 
-  openTournamentDialog(tournament: any) {
+    const [day, month, year] = item.startDate.split('/').map(Number);
+
+    // Create real Date object
+    return new Date(year, month - 1, day).getTime();
+  }
+
+  return (item as any)[property];
+};
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['selectedSports']) {
+      this.applyFilters();
+    }
+  }
+
+  applyFilters() {
+    let list = this.dataSource.data;
+
+    // 1. Sport filter
+    if (!this.selectedSports.includes('All')) {
+      list = list.filter(e => this.selectedSports.includes(e.sport));
+    }
+
+    // 2. Global text filter (all columns)
+    const text = this.searchText.toLowerCase().trim();
+    if (text) {
+      list = list.filter(e =>
+        (
+          (e.name ?? '') +
+          (e.sport ?? '') +
+          (e.discipline ?? '') +
+          (e.location ?? '') +
+          (e.registration ?? '') +
+          (e.startDate ?? '')
+        )
+          .toLowerCase()
+          .includes(text)
+      );
+    }
+
+    this.dataSource.data = list;
+  }
+
+  openTournamentDialog(tournament: Tournament) {
     this.dialog.open(TournamentDetailsDialogComponent, {
       width: '500px',
+      maxHeight: '90vh', 
       data: tournament
     });
   }

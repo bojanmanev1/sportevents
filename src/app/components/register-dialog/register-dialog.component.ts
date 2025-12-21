@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { Firestore, collection, addDoc } from '@angular/fire/firestore';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-register-dialog',
@@ -21,26 +22,37 @@ export class RegisterDialogComponent {
 
   constructor(
     private firestore: Firestore,
+    private snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<RegisterDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
-   async submit() {
-    if (!this.name || !this.phone) return;
+async submit() {
+  if (!this.name || !this.phone) return;
 
-    const registrationsCol = collection(this.firestore, 'registrations');
+  const registrationsCol = collection(this.firestore, 'registrations');
 
-    await addDoc(registrationsCol, {
-      tournamentName: this.data.tournament.name,
-      sport: this.data.tournament.sport,
-      discipline: this.data.tournament.discipline,
-      userName: this.name,
-      phone: this.phone,
-      createdAt: new Date().toISOString()
-    });
+  await addDoc(registrationsCol, {
+    tournamentName: this.data.tournament.name,
+    sport: this.data.tournament.sport,
+    discipline: this.data.tournament.discipline,
+    userName: this.name,
+    phone: this.phone,
+    createdAt: new Date().toISOString()
+  });
 
-    this.dialogRef.close(true);
-  }
+  this.dialogRef.close(true);
+
+  this.snackBar.open(
+    'Thank you! We will contact you shortly.',
+    'OK',
+    {
+      horizontalPosition: 'center',
+      verticalPosition: 'top'
+    }
+  );
+}
+
 
   close() {
     this.dialogRef.close(false);

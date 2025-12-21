@@ -14,36 +14,36 @@ import { FormsModule } from '@angular/forms';
 export class SportsMenuComponent {
   @Output() sportFilterChanged = new EventEmitter<string[]>();
   
-  sports = [
-    { name: 'All', icon: 'emoji_events' },
-    { name: 'Animal Sports', icon: 'pets' },
-    { name: 'Athletics', icon: 'directions_run' },
-    { name: 'Badminton', icon: 'sports_tennis' },
-    { name: 'Basketball', icon: 'sports_basketball' },
-    { name: 'Billiard', icon: 'sports' },
-    { name: 'Board Sports', icon: 'surfing' },
-    { name: 'Bowling', icon: 'sports' },
-    { name: 'Mountain Sports', icon: 'terrain' },
-    { name: 'Combat Sports', icon: 'sports_mma' },
-    { name: 'Cycling', icon: 'directions_bike' },
-    { name: 'ESports', icon: 'sports_esports' },
-    { name: 'Football', icon: 'sports_soccer' },
-    { name: 'Golf', icon: 'sports_golf' },
-    { name: 'Gymnastics', icon: 'self_improvement' },
-    { name: 'Handball', icon: 'sports_handball' },
-    { name: 'Hiking', icon: 'hiking' },
-    { name: 'Ice Sports', icon: 'ac_unit' },
-    { name: 'Padel', icon: 'sports_tennis' },
-    { name: 'Parasports', icon: 'accessible' },
-    { name: 'Racing', icon: 'sports_motorsports' },
-    { name: 'Rugby', icon: 'sports_rugby' },
-    { name: 'Tennis', icon: 'sports_tennis' },
-    { name: 'Teqball', icon: 'sports' },
-    { name: 'Volleyball', icon: 'sports_volleyball' },
-    { name: 'Water Sports', icon: 'pool' },
-    { name: 'Weapons', icon: 'sports_kabaddi' },
-    { name: 'Ping Pong', icon:'sports_tennis'}
-  ];
+sports = [
+  { name: 'All', icon: 'emoji_events' },
+  { name: 'Animal Sports', icon: 'pets' },
+  { name: 'Athletics', icon: 'directions_run' },
+  { name: 'Badminton', icon: 'sports_tennis' },
+  { name: 'Basketball', icon: 'sports_basketball' },
+  { name: 'Billiard', icon: 'sports' },
+  { name: 'Board Sports', icon: 'surfing' },
+  { name: 'Bowling', icon: 'sports' },
+  { name: 'Combat Sports', icon: 'sports_mma' },
+  { name: 'Cycling', icon: 'directions_bike' },
+  { name: 'ESports', icon: 'sports_esports' },
+  { name: 'Football', icon: 'sports_soccer' },
+  { name: 'Golf', icon: 'sports_golf' },
+  { name: 'Gymnastics', icon: 'self_improvement' },
+  { name: 'Handball', icon: 'sports_handball' },
+  { name: 'Ice Sports', icon: 'ac_unit' },
+  { name: 'Mountain Sports', icon: 'terrain' },
+  { name: 'Padel', icon: 'sports_tennis' },
+  { name: 'Parasports', icon: 'accessible' },
+  { name: 'Ping Pong', icon: 'sports_tennis' },
+  { name: 'Racing', icon: 'sports_motorsports' },
+  { name: 'Rugby', icon: 'sports_rugby' },
+  { name: 'Tennis', icon: 'sports_tennis' },
+  { name: 'Teqball', icon: 'sports' },
+  { name: 'Volleyball', icon: 'sports_volleyball' },
+  { name: 'Water Sports', icon: 'pool' },
+  { name: 'Weapons', icon: 'sports_kabaddi' },
+];
+
 
  selectedSports: string[] = ['All'];
 
