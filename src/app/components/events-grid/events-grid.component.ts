@@ -39,6 +39,7 @@ import { TournamentService, Tournament } from '../../services/tournament.service
 })
 export class EventsGridComponent
   implements OnInit, AfterViewInit, OnChanges {
+  allTournaments: Tournament[] = [];
 
   constructor(
     private dialog: MatDialog,
@@ -61,12 +62,14 @@ export class EventsGridComponent
 
   dataSource = new MatTableDataSource<Tournament>([]);
 
- ngOnInit() {
+ngOnInit() {
   this.svc.getAll().subscribe(tournaments => {
+    this.allTournaments = tournaments;      // ✅ keep master copy
     this.dataSource.data = tournaments;
     this.applyFilters();
   });
 }
+
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
@@ -92,33 +95,36 @@ this.dataSource.sortingDataAccessor = (item, property) => {
     }
   }
 
-  applyFilters() {
-    let list = this.dataSource.data;
+applyFilters() {
+  let list = [...this.allTournaments]; // ✅ always start fresh
 
-    // 1. Sport filter
-    if (!this.selectedSports.includes('All')) {
-      list = list.filter(e => this.selectedSports.includes(e.sport));
-    }
-
-    // 2. Global text filter (all columns)
-    const text = this.searchText.toLowerCase().trim();
-    if (text) {
-      list = list.filter(e =>
-        (
-          (e.name ?? '') +
-          (e.sport ?? '') +
-          (e.discipline ?? '') +
-          (e.location ?? '') +
-          (e.registration ?? '') +
-          (e.startDate ?? '')
-        )
-          .toLowerCase()
-          .includes(text)
-      );
-    }
-
-    this.dataSource.data = list;
+  // 1. Sport filter
+  if (!this.selectedSports.includes('All')) {
+    list = list.filter(e =>
+      this.selectedSports.includes(e.sport)
+    );
   }
+
+  // 2. Global text filter
+  const text = this.searchText.toLowerCase().trim();
+  if (text) {
+    list = list.filter(e =>
+      (
+        (e.name ?? '') +
+        (e.sport ?? '') +
+        (e.discipline ?? '') +
+        (e.location ?? '') +
+        (e.registration ?? '') +
+        (e.startDate ?? '')
+      )
+        .toLowerCase()
+        .includes(text)
+    );
+  }
+
+  this.dataSource.data = list;
+}
+
 
   openTournamentDialog(tournament: Tournament) {
     this.dialog.open(TournamentDetailsDialogComponent, {

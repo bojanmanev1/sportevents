@@ -1,6 +1,22 @@
 <div class="sports-menu">
+
+  <!-- MOBILE SHOW MORE -->
+   @if(isMobile && sports.length > mobileLimit){
+     <button
+       class="show-more-btn"
+       (click)="showAllMobile = !showAllMobile"
+     >
+       <mat-icon>
+         {{ showAllMobile ? 'expand_less' : 'expand_more' }}
+       </mat-icon>
+       <span>
+         {{ showAllMobile ? 'Show less' : 'Show more sports' }}
+       </span>
+     </button>
+   }
+
   <div class="sports-toggle-group">
-    @for(sport of sports; track sport){
+    @for (sport of visibleSports; track sport.name) {
       <button
         mat-flat-button
         (click)="selectSport(sport.name)"
@@ -12,4 +28,5 @@
       </button>
     }
   </div>
+
 </div>
