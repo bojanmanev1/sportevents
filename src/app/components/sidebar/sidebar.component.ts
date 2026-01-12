@@ -34,9 +34,7 @@ export class SidebarComponent {
   distance = 50;
 
    tournaments = [
-    { id: 1, name: 'National 3x3 Cup', sport: 'Basketball', registration: 'Open', startDate: new Date('2025-11-12'), location: 'Skopje' },
-    { id: 2, name: 'Tennis Masters 2025', sport: 'Tennis', registration: 'Closed', startDate: new Date('2025-12-01'), location: 'Bitola' },
-    { id: 3, name: 'Street Football Challenge', sport: 'Football', registration: 'Open', startDate: new Date('2025-11-25'), location: 'Ohrid' }
+    
   ];
 
   onSearch() {

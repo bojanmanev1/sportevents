@@ -12,6 +12,7 @@ export interface Tournament {
   registration?: 'Open' | 'Closed';
   description?: string;
   startDate?: string;
+  website?: string;
   prize?: string;
   showInTopMenu?: boolean;
 }

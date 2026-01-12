@@ -2,25 +2,29 @@
   <mat-card class="details-card">
     <mat-card-header>
       <mat-card-title>{{ tournament.name }}</mat-card-title>
-      <mat-card-subtitle>{{ tournament.sport }} • {{ tournament.location }}</mat-card-subtitle>
+      <mat-card-subtitle>
+        {{ tournament.sport }} • {{ tournament.location }}
+      </mat-card-subtitle>
     </mat-card-header>
 
-    <mat-card-content>
-      <p><strong>Discipline:</strong> {{ tournament.discipline }}</p>
-      <p><strong>Registration:</strong> {{ tournament.registration }}</p>
-      <p><strong>Fee:</strong> {{ tournament.prize }}</p>
-      <p><strong>Start Date:</strong> {{ tournament.startDate }}</p>
+    <mat-card-content class="details-content">
+      @if(tournament.discipline){ <p><strong>Discipline:</strong> {{ tournament.discipline }}</p>}
+      @if(tournament.registration){<p><strong>Registration:</strong> {{ tournament.registration }}</p>}
+      @if(tournament.fee){ <p><strong>Fee:</strong> {{ tournament.fee }}</p>}
+      @if(tournament.startDate){<p><strong>Start Date:</strong> {{ tournament.startDate }}</p>}
+      @if(tournament.website){<p><strong>Website:</strong> <a style="color: rgb(226, 226, 226);" href="{{tournament.website}}" target="_blank"> {{ tournament.website }} </a></p>}
+      @if(tournament.description){<p>{{ tournament.description }}</p>}
 
-      <p>{{ tournament.description }}</p>
+      
 
-   <div class="map-placeholder" #mapContainer></div>
+      <div class="map-placeholder" #mapContainer></div>
     </mat-card-content>
-    
-  <mat-card-actions>
+
+    <mat-card-actions class="details-footer">
       <button mat-raised-button color="primary" (click)="openRegisterDialog()">
         Show Interest
       </button>
-       <button mat-button (click)="close()">Back</button>
+      <button mat-button (click)="close()">Back</button>
     </mat-card-actions>
   </mat-card>
 </div>

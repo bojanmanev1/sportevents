@@ -1,0 +1,73 @@
+<div class="dialog-shell">
+
+  <h2 class="dialog-title">Register your tournament</h2>
+
+  <div class="dialog-body">
+    <mat-form-field appearance="outline">
+      <mat-label>Event name</mat-label>
+      <input matInput [(ngModel)]="model.name" name="name" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Sport</mat-label>
+      <mat-select [(ngModel)]="model.sport" name="sport" required>
+        <mat-option *ngFor="let s of sports" [value]="s">{{ s }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Discipline</mat-label>
+      <input matInput [(ngModel)]="model.discipline" name="discipline" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Starting Date</mat-label>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        [(ngModel)]="model.startDate"
+        name="startDate"
+        required
+      />
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Location</mat-label>
+      <input matInput [(ngModel)]="model.location" name="location" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Registration</mat-label>
+      <mat-select [(ngModel)]="model.registration" name="registration" required>
+        <mat-option value="Open">Open</mat-option>
+        <mat-option value="Closed">Closed</mat-option>
+        <mat-option value="Not open yet">Not open yet</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Fee</mat-label>
+      <input matInput type="number" [(ngModel)]="model.fee" name="fee" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Website</mat-label>
+      <input matInput [(ngModel)]="model.website" name="website" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Description</mat-label>
+      <textarea matInput rows="3" [(ngModel)]="model.description" name="description"></textarea>
+    </mat-form-field>
+  </div>
+
+  <div class="dialog-footer">
+    <button mat-raised-button color="primary" (click)="send()" >
+      {{ sending ? 'Sending...' : 'Send' }}
+    </button>
+    <button mat-button (click)="close()">Cancel</button>
+  </div>
+
+</div>

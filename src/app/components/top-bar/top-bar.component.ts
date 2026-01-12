@@ -1,3 +1,4 @@
+import { TournamentSelfRegistrationDialog } from './../tournament-self-registration-dialog/tournament-self-registration-dialog';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -6,7 +7,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { TournamentService, Tournament } from '../../services/tournament.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TournamentDetailsDialogComponent } from '../tournament-details-dialog/tournament-details-dialog';
-
 @Component({
   selector: 'app-top-bar',
   standalone: true,
@@ -37,5 +37,14 @@ export class TopBarComponent implements OnInit {
       maxHeight: '90vh', 
       data: event
     });
+  }
+
+    openSelfRegistrationDialog(): void {
+ this.dialog.open(TournamentSelfRegistrationDialog, {
+  width: '560px',
+  maxWidth: '95vw',
+  disableClose: true,
+  panelClass: 'turniri-dialog'
+});
   }
 }
