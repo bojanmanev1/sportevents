@@ -11,7 +11,7 @@
       @if(tournament.discipline){ <p><strong>Discipline:</strong> {{ tournament.discipline }}</p>}
       @if(tournament.registration){<p><strong>Registration:</strong> {{ tournament.registration }}</p>}
       @if(tournament.fee){ <p><strong>Fee:</strong> {{ tournament.fee }}</p>}
-      @if(tournament.startDate){<p><strong>Start Date:</strong> {{ tournament.startDate }}</p>}
+      @if(tournament.startDate){<p><strong>Start Date:</strong> {{ tournament.startDate | date:'dd.MM.yyyy' }}</p>}
       @if(tournament.website){<p><strong>Website:</strong> <a style="color: rgb(226, 226, 226);" href="{{tournament.website}}" target="_blank"> {{ tournament.website }} </a></p>}
       @if(tournament.description){<p>{{ tournament.description }}</p>}
 

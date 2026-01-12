@@ -26,6 +26,11 @@ export class TournamentDetailsDialogComponent implements AfterViewInit {
     private dialog: MatDialog
   ) {
     this.tournament = data;
+
+    const sd = this.tournament?.startDate as any;
+if (sd?.toDate) {
+  this.tournament.startDate = sd.toDate(); // Timestamp -> Date
+}
   }
 
   ngAfterViewInit(): void {

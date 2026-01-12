@@ -3,28 +3,21 @@
     <mat-icon>sports_soccer</mat-icon>
     <span class="app-title">Turniri.mk</span>
   </div>
- @if(upcomingEvents.length){
-   <div class="events-ticker">
-     <div class="ticker-content">
-       <div *ngFor="let event of upcomingEvents" class="event-item" (click)="openTournament(event)">
-         <mat-icon>event</mat-icon>
-         <span>
-           {{ event.name }}
-           — {{ event.location }}
-           ({{ event.startDate }})
-         </span>
-       </div>
-     </div>
-   </div>
 
- }
+  <div class="events-ticker" *ngIf="upcomingEvents.length">
+    <div class="ticker-content">
+      <div *ngFor="let event of upcomingEvents" class="event-item" (click)="openTournament(event)">
+        <mat-icon>event</mat-icon>
+        <span>
+          {{ event.name }}
+          — {{ event.location }}
+          ({{ event.startDate | date:'dd.MM.yyyy'}})
+        </span>
+      </div>
+    </div>
+  </div>
 
-<button
-  mat-icon-button
-  class="register-btn"
-  aria-label="Register tournament"
-  (click)="openSelfRegistrationDialog()"
->
-  Register
-</button>
+  <button mat-icon-button class="info-btn" aria-label="About">
+    <mat-icon>info_outline</mat-icon>
+  </button>
 </mat-toolbar>

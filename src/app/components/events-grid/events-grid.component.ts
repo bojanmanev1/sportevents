@@ -74,18 +74,11 @@ ngOnInit() {
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
 
-    // ✅ Proper date sorting
 this.dataSource.sortingDataAccessor = (item, property) => {
   if (property === 'startDate') {
-    if (!item.startDate) return 0;
-
-    const [day, month, year] = item.startDate.split('/').map(Number);
-
-    // Create real Date object
-    return new Date(year, month - 1, day).getTime();
+    return item.startDate?.getTime?.() ?? Number.MAX_SAFE_INTEGER;
   }
-
-  return (item as any)[property];
+  return (item as any)[property] ?? '';
 };
   }
 
@@ -105,22 +98,26 @@ applyFilters() {
     );
   }
 
-  // 2. Global text filter
   const text = this.searchText.toLowerCase().trim();
-  if (text) {
-    list = list.filter(e =>
+if (text) {
+  list = list.filter(e => {
+    const startDateText = e.startDate ? e.startDate.toLocaleDateString('mk-MK') : '';
+
+    return (
       (
         (e.name ?? '') +
         (e.sport ?? '') +
         (e.discipline ?? '') +
         (e.location ?? '') +
         (e.registration ?? '') +
-        (e.startDate ?? '')
+        startDateText
       )
         .toLowerCase()
         .includes(text)
     );
-  }
+  });
+}
+
 
   this.dataSource.data = list;
 }
