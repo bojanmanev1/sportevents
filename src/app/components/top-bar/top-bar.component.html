@@ -11,7 +11,7 @@
         <span>
           {{ event.name }}
           — {{ event.location }}
-          ({{ event.startDate }})
+          ({{ event.startDate | date:'dd.MM.yyyy'}})
         </span>
       </div>
     </div>

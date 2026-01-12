@@ -9,7 +9,7 @@
       <p><strong>Discipline:</strong> {{ tournament.discipline }}</p>
       <p><strong>Registration:</strong> {{ tournament.registration }}</p>
       <p><strong>Fee:</strong> {{ tournament.prize }}</p>
-      <p><strong>Start Date:</strong> {{ tournament.startDate }}</p>
+      <p><strong>Start Date:</strong> {{ tournament.startDate | date:'dd.MM.yyyy' }}</p>
 
       <p>{{ tournament.description }}</p>
 
