@@ -14,6 +14,8 @@ export interface Tournament {
   startDate?: Date | null;
   prize?: string;
   showInTopMenu?: boolean;
+  latitude?: number | string | null;
+  longitude?: number | string | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -42,6 +44,8 @@ export class TournamentService {
         list.map((t: any) => ({
           ...t,
           startDate: toDate(t.startDate),
+          latitude: toNum(t.latitude),
+          longitude: toNum(t.longitude),
         })) as Tournament[]
       ),
       shareReplay(1)
@@ -67,3 +71,9 @@ export class TournamentService {
     );
   }
 }
+const toNum = (v: any): number | null => {
+  if (v === null || v === undefined || v === '') return null;
+  const n = typeof v === 'number' ? v : parseFloat(v);
+  return Number.isFinite(n) ? n : null;
+};
+
