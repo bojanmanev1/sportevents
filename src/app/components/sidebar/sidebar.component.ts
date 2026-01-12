@@ -36,6 +36,7 @@ export class SidebarComponent implements OnInit {
     private tournamentService: TournamentService,
     private geocoding: GeocodingService
   ) {}
+  status: 'idle' | 'loading' | 'not-found' | 'no-coords' | 'ok' = 'idle';
 
   loading = false;
   searched = false;
@@ -56,41 +57,54 @@ export class SidebarComponent implements OnInit {
 
 onSearch() {
   this.nearby = [];
-  this.searched = true;
+
   const query = this.location.trim();
   if (!query) return;
+
+  this.status = 'loading';
 
   this.geocoding.geocode(query).subscribe({
     next: center => {
       if (!center) {
-        this.loading = false;
+        this.status = 'not-found';
         this.nearby = [];
         return;
       }
 
-      const candidates = this.allTournaments
-        .filter(t => typeof t.latitude === 'number' && typeof t.longitude === 'number');
+      const candidates = this.allTournaments.filter(
+        t => typeof t.latitude === 'number' && typeof t.longitude === 'number'
+      );
 
-      
+      if (candidates.length === 0) {
+        this.status = 'no-coords';
+        this.nearby = [];
+        return;
+      }
+
       const withCoords = candidates
         .map(t => ({
           t,
-          d: this.haversineKm(center.lat, center.lon, t.latitude as number, t.longitude as number),
+          d: this.haversineKm(
+            center.lat,
+            center.lon,
+            t.latitude as number,
+            t.longitude as number
+          ),
         }))
         .sort((a, b) => a.d - b.d)
         .slice(0, 3)
         .map(x => x.t);
 
-
       this.nearby = withCoords;
-       this.loading = false;
+      this.status = 'ok';
     },
-    error: err => {
+    error: _err => {
+      this.status = 'not-found';
       this.nearby = [];
-      this.loading = false;
     }
   });
 }
+
 
 
   private haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {

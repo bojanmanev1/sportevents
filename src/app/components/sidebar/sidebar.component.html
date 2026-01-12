@@ -21,23 +21,42 @@
 <mat-nav-list class="event-list">
   <h4>Events nearby</h4>
 
-  @if (loading) {
-    <div class="empty-hint loader-row">
-      <mat-progress-spinner diameter="22" mode="indeterminate"></mat-progress-spinner>
-      <span>Searching…</span>
+  @if (status === 'idle') {
+    <div class="empty-hint">
+      Search a city to see nearest tournaments.
     </div>
-  } @else if (nearby.length === 0 && !searched) {
-    <div class="empty-hint">Search a city to see nearest tournaments.</div>
-  } @else if (nearby.length === 0 && searched) {
-    <div class="empty-hint">No nearby tournaments found.</div>
   }
 
-  @for (t of nearby; track t.id ?? t.name) {
-    <a class="event-item" mat-list-item (click)="openTournamentDialog(t)">
-      <span matLine>{{ t.name }}</span>
-      <span matLine class="secondary">{{ t.location }} • {{ t.sport }}</span>
-    </a>
+  @if (status === 'loading') {
+    <div class="empty-hint loader-row">
+      <mat-progress-spinner diameter="22" mode="indeterminate"></mat-progress-spinner>
+      <span>Searching location…</span>
+    </div>
+  }
+
+  @if (status === 'not-found') {
+    <div class="empty-hint">
+      Location not found. Please try another city or region.
+    </div>
+  }
+
+  @if (status === 'no-coords') {
+    <div class="empty-hint">
+      No tournaments with location data available yet.
+    </div>
+  }
+
+  @if (status === 'ok') {
+    @for (t of nearby; track t.id ?? t.name) {
+      <a class="event-item" mat-list-item (click)="openTournamentDialog(t)">
+        <span matLine>{{ t.name }}</span>
+        <span matLine class="secondary">
+          {{ t.location }} • {{ t.sport }}
+        </span>
+      </a>
+    }
   }
 </mat-nav-list>
+
 
 </mat-card>
