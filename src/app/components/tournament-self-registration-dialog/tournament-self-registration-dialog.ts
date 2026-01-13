@@ -9,10 +9,29 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
-
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCardModule } from '@angular/material/card';
+import {
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+  provideNativeDateAdapter
+} from '@angular/material/core';
+import { DateAdapter } from '@angular/material/core';
+import { Firestore, collection, addDoc, serverTimestamp } from '@angular/fire/firestore';
+
+export const MK_DATE_FORMATS = {
+  parse: {
+    dateInput: { day: '2-digit', month: '2-digit', year: 'numeric' } as any,
+  },
+  display: {
+    dateInput: { day: '2-digit', month: '2-digit', year: 'numeric' } as any,
+    monthYearLabel: { month: 'short', year: 'numeric' } as any,
+    dateA11yLabel: { day: '2-digit', month: '2-digit', year: 'numeric' } as any,
+    monthYearA11yLabel: { month: 'long', year: 'numeric' } as any,
+  },
+};
+
 
 type SelfRegistrationModel = {
   name: string;
@@ -29,6 +48,11 @@ type SelfRegistrationModel = {
 @Component({
   selector: 'app-tournament-self-registration-dialog',
   standalone: true,
+    providers: [
+      { provide: MAT_DATE_LOCALE, useValue: 'mk-MK' },
+    provideNativeDateAdapter(),
+    { provide: MAT_DATE_FORMATS, useValue: MK_DATE_FORMATS }
+  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -47,15 +71,42 @@ type SelfRegistrationModel = {
   styleUrls: ['./tournament-self-registration-dialog.scss'],
 })
 export class TournamentSelfRegistrationDialog {
+  
   sending = false;
 
-  sports: string[] = ['Football', 'Basketball', 'Volleyball', 'Tennis', 'Handball'];
-
+  sports: string[] = [
+  'Animal Sports',
+  'Athletics',
+  'Badminton',
+  'Basketball',
+  'Billiard',
+  'Board Sports',
+  'Bowling',
+  'Combat Sports',
+  'Cycling',
+  'ESports',
+  'Football',
+  'Golf',
+  'Gymnastics',
+  'Handball',
+  'Ice Sports',
+  'Mountain Sports',
+  'Padel',
+  'Parasports',
+  'Ping Pong',
+  'Racing',
+  'Rugby',
+  'Tennis',
+  'Teqball',
+  'Volleyball',
+  'Water Sports',
+  'Weapons'
+];
   model: SelfRegistrationModel = {
     name: '',
     sport: '',
     discipline: '',
-    startDate: null,
+    startDate: null as Date | null,
     location: '',
     registration: '',
     fee: null,
@@ -65,42 +116,67 @@ export class TournamentSelfRegistrationDialog {
 
   constructor(
     private dialogRef: MatDialogRef<TournamentSelfRegistrationDialog>,
-    private snackBar: MatSnackBar
-  ) {}
+    private snackBar: MatSnackBar,
+    private dateAdapter: DateAdapter<Date>,
+    private firestore: Firestore
+
+  ) {
+    this.dateAdapter.setLocale('mk-MK');
+  }
 
   close(): void {
     this.dialogRef.close();
   }
 
-  // isValid(): boolean {
-  //   return !!(
-  //     this.model.name?.trim() &&
-  //     this.model.sport &&
-  //     this.model.startDate &&
-  //     this.model.location?.trim() &&
-  //     this.model.registration
-  //   );
-  // }
-
-  async send(): Promise<void> {
-    debugger
-    // if (!this.isValid()) return;
-
-    try {
-      this.sending = true;
-
-      // ✅ Step 2: Firestore addDoc(...) will go here
-      await new Promise((r) => setTimeout(r, 400));
-
-      this.dialogRef.close(true);
-
-      this.snackBar.open(
-        "Thanks! We’ll contact you after reviewing your registration.",
-        'OK',
-        { duration: 5000 }
-      );
-    } finally {
-      this.sending = false;
-    }
+  isValid(): boolean {
+    return !!(
+      this.model.name?.trim() &&
+      this.model.sport &&
+      this.model.startDate &&
+      this.model.location?.trim() &&
+      this.model.registration
+    );
   }
+
+async send(): Promise<void> {
+  if (!this.isValid()) return;
+
+  try {
+    this.sending = true;
+
+    const ref = collection(this.firestore, 'selfregistrations');
+
+    const payload = {
+      name: this.model.name.trim(),
+      sport: this.model.sport,
+      discipline: (this.model.discipline ?? '').trim(),
+      startDate: this.model.startDate,              // Date -> Firestore Timestamp automatically
+      location: this.model.location.trim(),
+      registration: this.model.registration,
+      fee: this.model.fee ?? null,
+      website: (this.model.website ?? '').trim(),
+      description: (this.model.description ?? '').trim(),
+
+      status: 'pending',                            // ✅ important for admin
+      createdAt: serverTimestamp(),                 // ✅ created time
+      source: 'public',                             // optional
+    };
+
+    await addDoc(ref, payload);
+
+    this.dialogRef.close(true);
+
+    this.snackBar.open(
+      "Thanks! We’ll contact you after reviewing your registration.",
+      'OK',
+      { duration: 5000 }
+    );
+  } catch (err) {
+    console.error(err);
+    this.snackBar.open('Failed to submit. Please try again.', 'OK', { duration: 5000 });
+  } finally {
+    this.sending = false;
+  }
+}
+
 }

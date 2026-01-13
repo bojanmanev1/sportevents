@@ -17,7 +17,13 @@
     </div>
   </div>
 
-  <button mat-icon-button class="info-btn" aria-label="About">
-    <mat-icon>info_outline</mat-icon>
-  </button>
+<button
+  mat-raised-button
+  color="accent"
+  class="register-btn"
+  (click)="openSelfRegistrationDialog()"
+>
+  <mat-icon>how_to_reg</mat-icon>
+  Register
+</button>
 </mat-toolbar>

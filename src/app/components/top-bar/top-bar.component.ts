@@ -43,7 +43,8 @@ export class TopBarComponent implements OnInit {
  this.dialog.open(TournamentSelfRegistrationDialog, {
   width: '560px',
   maxWidth: '95vw',
-  disableClose: true,
+  disableClose: false,
+  hasBackdrop: true, 
   panelClass: 'turniri-dialog'
 });
   }

@@ -17,18 +17,21 @@
 
     <mat-form-field appearance="outline">
       <mat-label>Discipline</mat-label>
-      <input matInput [(ngModel)]="model.discipline" name="discipline" />
+      <input matInput [(ngModel)]="model.discipline" name="discipline"  required/>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>Starting Date</mat-label>
+
       <input
         matInput
         [matDatepicker]="picker"
         [(ngModel)]="model.startDate"
         name="startDate"
         required
+        readonly
       />
+
       <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
@@ -49,7 +52,7 @@
 
     <mat-form-field appearance="outline">
       <mat-label>Fee</mat-label>
-      <input matInput type="number" [(ngModel)]="model.fee" name="fee" />
+      <input matInput type="text" [(ngModel)]="model.fee" name="fee" required />
     </mat-form-field>
 
     <mat-form-field appearance="outline">
@@ -59,7 +62,7 @@
 
     <mat-form-field appearance="outline">
       <mat-label>Description</mat-label>
-      <textarea matInput rows="3" [(ngModel)]="model.description" name="description"></textarea>
+      <textarea matInput rows="3" [(ngModel)]="model.description" name="description"  required></textarea>
     </mat-form-field>
   </div>
 
