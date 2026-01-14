@@ -1,8 +1,9 @@
 .sidebar-card {
   width: 280px;
   background: #1b1b1b;
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.75);
-  
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.75);
+  border-radius: 10px;
+  margin-bottom: 10px;
   color: #eaeaea;
   border: 1px solid #2a2a2a;
   padding: 1rem;
@@ -84,4 +85,136 @@
   align-items: center;
   gap: 10px;
   padding: 10px 0;
+}
+
+.calendar-wrap {
+  position: relative; // ✅ needed for absolute tooltip
+}
+
+/* Tooltip bubble */
+.hover-tooltip {
+  position: absolute;
+  z-index: 1000;
+  min-width: 160px;
+  max-width: 220px;
+
+  padding: 10px 12px;
+  border-radius: 10px;
+
+  background: #111; // dark bubble
+  color: #f5f5f5;
+
+  border: 1px solid rgba(0, 188, 212, 0.55);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.65);
+
+  pointer-events: none; // ✅ doesn't block hovering cells
+}
+
+/* Little arrow */
+.hover-tooltip::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 14px;
+  width: 12px;
+  height: 12px;
+  background: #111;
+  border-left: 1px solid rgba(0, 188, 212, 0.55);
+  border-bottom: 1px solid rgba(0, 188, 212, 0.55);
+  transform: rotate(45deg);
+}
+
+/* Tooltip content */
+.tip-date {
+  color: rgba(0, 188, 212, 0.9);
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.tip-item {
+  font-size: 12px;
+  line-height: 1.3;
+  opacity: 0.95;
+}
+
+
+
+/* ===========================
+   CALENDAR THEME (Sidebar)
+   =========================== */
+
+/* Make calendar surface match card */
+:host ::ng-deep .mat-calendar {
+  background: #1b1b1b;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* HEADER (month + arrows) */
+:host ::ng-deep .mat-calendar-header {
+ 
+  color: rgba(0, 188, 212, 0.55) !important;
+  padding: 10px 8px;
+}
+
+/* Month label text */
+:host ::ng-deep .mat-calendar-header .mat-calendar-period-button {
+  color: rgba(0, 188, 212, 0.55) !important;
+  font-weight: 700;
+}
+
+/* Arrow buttons + icons */
+:host ::ng-deep .mat-calendar-previous-button,
+:host ::ng-deep .mat-calendar-next-button {
+  color: rgba(0, 188, 212, 0.55) !important;
+}
+
+:host ::ng-deep .mat-calendar-previous-button .mat-mdc-button-persistent-ripple,
+:host ::ng-deep .mat-calendar-next-button .mat-mdc-button-persistent-ripple {
+  display: none; /* avoid odd ripple artifacts */
+}
+
+
+:host ::ng-deep .mat-calendar-table-header th {
+  color: rgba(0, 188, 212, 0.55) !important;
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+/* DAY NUMBERS */
+:host ::ng-deep .mat-calendar-body-cell-content {
+  color: #fff !important;       /* numbers white */
+  border-radius: 50%;
+}
+
+/* Non-current month days slightly dim */
+:host ::ng-deep .mat-calendar-body-disabled .mat-calendar-body-cell-content,
+:host ::ng-deep .mat-calendar-body-cell-content.mat-calendar-body-outside-month {
+  opacity: 0.35;
+}
+
+/* Selected day */
+:host ::ng-deep .mat-calendar-body-selected {
+  background: rgba(0, 188, 212, 0.9) !important;
+  color: #fff !important;
+}
+
+/* Hover day */
+:host ::ng-deep .mat-calendar-body-cell:hover .mat-calendar-body-cell-content {
+  background: rgba(0, 188, 212, 0.22);
+}
+
+/* ✅ Tournament day highlight (THIS makes it visible) */
+:host ::ng-deep .mat-calendar-body-cell.has-tournament .mat-calendar-body-cell-content {
+  background: rgba(0, 188, 212, 0.55) !important;
+  border: 1px solid rgba(0, 188, 212, 0.95) !important;
+  box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.18);
+  color: #fff !important;
+  font-weight: 700;
+}
+
+/* Tournament day hover stronger */
+:host ::ng-deep .mat-calendar-body-cell.has-tournament:hover .mat-calendar-body-cell-content {
+  background: rgba(0, 188, 212, 0.75) !important;
 }
