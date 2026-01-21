@@ -9,17 +9,22 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatDialog } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
+import { FullCalendarModule } from '@fullcalendar/angular';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+
 import { TournamentDetailsDialogComponent } from '../tournament-details-dialog/tournament-details-dialog';
 import { TournamentService, Tournament } from '../../services/tournament.service';
 import { GeocodingService } from '../../services/geocoding.service';
-import { AfterViewInit,ElementRef } from '@angular/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { DateAdapter,provideNativeDateAdapter, MatNativeDateModule } from '@angular/material/core';
-import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
-import { MatCalendar } from '@angular/material/datepicker';
-import { ViewChild } from '@angular/core';
 
+type FcEvent = {
+  title: string;
+  start: Date;
+  allDay: true;
+  // custom data
+  extendedProps: { tournament: Tournament };
+};
 
 @Component({
   selector: 'app-sidebar',
@@ -34,167 +39,133 @@ import { ViewChild } from '@angular/core';
     MatButtonModule,
     MatListModule,
     MatProgressSpinnerModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-  ],
-  providers: [
-    provideNativeDateAdapter(),
-    { provide: MAT_DATE_LOCALE, useValue: 'mk-MK' },
+    FullCalendarModule,
   ],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarComponent implements OnInit, AfterViewInit {
-@ViewChild(MatCalendar) calendar!: MatCalendar<Date>;
+export class SidebarComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private tournamentService: TournamentService,
     private geocoding: GeocodingService,
-    private elRef: ElementRef<HTMLElement>,
   ) {}
-  status: 'idle' | 'loading' | 'not-found' | 'no-coords' | 'ok' = 'idle';
-  tooltipPos = { x: 0, y: 0 };
-  loading = false;
-  searched = false;
-private calendarBodyEl: HTMLElement | null = null;
-private onMouseOver?: (ev: Event) => void;
-private onMouseLeave?: () => void;
-  location = '';
 
-  // ✅ keep all tournaments from Firestore
+  status: 'idle' | 'loading' | 'not-found' | 'no-coords' | 'ok' = 'idle';
+  loading = false;
+
+  location = '';
   allTournaments: Tournament[] = [];
- selectedDate: Date | null = null;
-  // ✅ show results here (starts empty)
   nearby: Tournament[] = [];
 
-    private byDay = new Map<string, Tournament[]>();
+  // ✅ FullCalendar config
+  calendarOptions: any = {
+    plugins: [dayGridPlugin, interactionPlugin],
+    initialView: 'dayGridMonth',
+    height: 'auto',
+    firstDay: 1, // Monday
+    headerToolbar: { left: 'prev,next', center: 'title', right: '' },
 
-  hoverInfo: { date: Date; names: string[] } | null = null;
+    events: [] as FcEvent[],
 
- ngOnInit(): void {
+    // ✅ hover tooltip (simple + reliable)
+    eventMouseEnter: (info: any) => {
+      // show tournament name on hover
+      info.el.title = info.event.title;
+    },
+
+    // ✅ open details dialog on click
+    eventClick: (info: any) => {
+      const t = info.event.extendedProps?.tournament as Tournament | undefined;
+      if (!t) return;
+
+      this.dialog.open(TournamentDetailsDialogComponent, {
+        width: '500px',
+        maxHeight: '90vh',
+        data: t,
+      });
+    },
+  };
+
+  ngOnInit(): void {
     this.tournamentService.getAll().subscribe(list => {
       this.allTournaments = list;
 
+      // rebuild calendar events
+      const events: FcEvent[] = list
+        .map(t => {
+          const d = this.toDate((t as any).startDate);
+          if (!d) return null;
+          return {
+            title: t.name,
+            start: d,
+            allDay: true,
+            extendedProps: { tournament: t },
+          } as FcEvent;
+        })
+        .filter(Boolean) as FcEvent[];
 
-     
-
-      // rebuild map
-      this.byDay.clear();
-      for (const t of list) {
-        const d = this.toDate((t as any).startDate);
-        if (!d) continue;
-
-        const key = this.dayKey(d);
-        const arr = this.byDay.get(key) ?? [];
-        arr.push(t);
-        this.byDay.set(key, arr);
-      }
-
-      // re-bind hover listeners when data changes
-      queueMicrotask(() => {
-  this.calendar?.updateTodaysDate(); // ✅ forces rerender so dateClass applies
-  this.bindCalendarHover();
-});
+      // update FullCalendar
+      this.calendarOptions = {
+        ...this.calendarOptions,
+        events,
+      };
     });
   }
 
-  
-dateClass: MatCalendarCellClassFunction<Date> = (date) => {
-  if (!date) return '';
+  onSearch() {
+    this.nearby = [];
 
-  const key = this.dayKey(date);
-  return this.byDay.has(key) ? 'has-tournament' : '';
-};
+    const query = this.location.trim();
+    if (!query) return;
 
-  ngAfterViewInit(): void {
-    this.bindCalendarHover();
+    this.status = 'loading';
+    this.loading = true;
 
-   this.calendar.stateChanges.subscribe(() => {
-    queueMicrotask(() => this.bindCalendarHover());
-  });
-  }
+    this.geocoding.geocode(query).subscribe({
+      next: center => {
+        if (!center) {
+          this.status = 'not-found';
+          this.nearby = [];
+          this.loading = false;
+          return;
+        }
 
- 
-onSelect(d: Date | null) {
-  this.selectedDate = d;
+        const candidates = this.allTournaments.filter(
+          t => typeof (t as any).latitude === 'number' && typeof (t as any).longitude === 'number'
+        );
 
-  if (!d) {
-    this.hoverInfo = null;
-    return;
-  }
+        if (candidates.length === 0) {
+          this.status = 'no-coords';
+          this.nearby = [];
+          this.loading = false;
+          return;
+        }
 
-  const key = this.dayKey(d);
-  const list = this.byDay.get(key) ?? [];
+        const withCoords = candidates
+          .map(t => ({
+            t,
+            d: this.haversineKm(
+              center.lat,
+              center.lon,
+              (t as any).latitude as number,
+              (t as any).longitude as number
+            ),
+          }))
+          .sort((a, b) => a.d - b.d)
+          .slice(0, 3)
+          .map(x => x.t);
 
-  this.hoverInfo = list.length
-    ? { date: d, names: list.map(x => x.name) }
-    : { date: d, names: ['No tournaments'] };
-}
-
-private bindCalendarHover() {
-  const host = this.elRef.nativeElement;
-  const wrap = host.querySelector('.calendar-wrap') as HTMLElement | null;
-  const body = host.querySelector('.mat-calendar-body') as HTMLElement | null;
-  if (!wrap || !body) return;
-
-  // ✅ if body changed, detach old listeners
-  if (this.calendarBodyEl && this.calendarBodyEl !== body) {
-    if (this.onMouseOver) this.calendarBodyEl.removeEventListener('mouseover', this.onMouseOver);
-    if (this.onMouseLeave) this.calendarBodyEl.removeEventListener('mouseleave', this.onMouseLeave);
-  }
-
-  // ✅ if same body and already bound, skip
-  if (this.calendarBodyEl === body && this.onMouseOver) return;
-
-  this.calendarBodyEl = body;
-
-  // ✅ stable handler using data-mat-date (not aria-label)
-  this.onMouseOver = (ev: Event) => {
-    const cell = (ev.target as HTMLElement).closest('.mat-calendar-body-cell') as HTMLElement | null;
-    if (!cell) return;
-
-    const dateStr = cell.getAttribute('data-mat-date'); // e.g. "2026-01-14"
-    if (!dateStr) {
-      this.hoverInfo = null;
-      return;
-    }
-
-    // parse yyyy-mm-dd
-    const [y, m, d] = dateStr.split('-').map(Number);
-    const date = new Date(y, m - 1, d);
-
-    const key = this.dayKey(date);
-    const list = this.byDay.get(key);
-    if (!list?.length) {
-      this.hoverInfo = null;
-      return;
-    }
-
-    this.hoverInfo = { date, names: list.map(x => x.name) };
-
-    // position tooltip near the cell
-    const cellRect = cell.getBoundingClientRect();
-    const wrapRect = wrap.getBoundingClientRect();
-    this.tooltipPos.x = (cellRect.right - wrapRect.left) + 8;
-    this.tooltipPos.y = (cellRect.top - wrapRect.top) - 6;
-  };
-
-  this.onMouseLeave = () => {
-    this.hoverInfo = null;
-  };
-
-  body.addEventListener('mouseover', this.onMouseOver);
-  body.addEventListener('mouseleave', this.onMouseLeave);
-}
-
-
-
-  private dayKey(d: Date): string {
-    // yyyy-mm-dd
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${y}-${m}-${day}`;
+        this.nearby = withCoords;
+        this.status = 'ok';
+        this.loading = false;
+      },
+      error: () => {
+        this.status = 'not-found';
+        this.nearby = [];
+        this.loading = false;
+      },
+    });
   }
 
   private toDate(v: any): Date | null {
@@ -204,58 +175,6 @@ private bindCalendarHover() {
     const d = new Date(v);
     return isNaN(d.getTime()) ? null : d;
   }
-
-onSearch() {
-  this.nearby = [];
-
-  const query = this.location.trim();
-  if (!query) return;
-
-  this.status = 'loading';
-
-  this.geocoding.geocode(query).subscribe({
-    next: center => {
-      if (!center) {
-        this.status = 'not-found';
-        this.nearby = [];
-        return;
-      }
-
-      const candidates = this.allTournaments.filter(
-        t => typeof t.latitude === 'number' && typeof t.longitude === 'number'
-      );
-
-      if (candidates.length === 0) {
-        this.status = 'no-coords';
-        this.nearby = [];
-        return;
-      }
-
-      const withCoords = candidates
-        .map(t => ({
-          t,
-          d: this.haversineKm(
-            center.lat,
-            center.lon,
-            t.latitude as number,
-            t.longitude as number
-          ),
-        }))
-        .sort((a, b) => a.d - b.d)
-        .slice(0, 3)
-        .map(x => x.t);
-
-      this.nearby = withCoords;
-      this.status = 'ok';
-    },
-    error: _err => {
-      this.status = 'not-found';
-      this.nearby = [];
-    }
-  });
-}
-
-
 
   private haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
     const R = 6371;
@@ -272,7 +191,7 @@ onSearch() {
   private deg2rad(v: number): number {
     return v * (Math.PI / 180);
   }
-
+  
   openTournamentDialog(t: Tournament) {
     this.dialog.open(TournamentDetailsDialogComponent, {
       width: '500px',

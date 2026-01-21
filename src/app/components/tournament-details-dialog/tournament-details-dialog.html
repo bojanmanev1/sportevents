@@ -16,8 +16,9 @@
       @if(tournament.description){<p>{{ tournament.description }}</p>}
 
       
+      @if(tournament.latitude){<div class="map-placeholder" #mapContainer></div>}
 
-      <div class="map-placeholder" #mapContainer></div>
+      
     </mat-card-content>
 
     <mat-card-actions class="details-footer">

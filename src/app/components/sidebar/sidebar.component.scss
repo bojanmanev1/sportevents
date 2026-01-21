@@ -140,81 +140,86 @@
 
 
 
-/* ===========================
-   CALENDAR THEME (Sidebar)
-   =========================== */
-
-/* Make calendar surface match card */
-:host ::ng-deep .mat-calendar {
+/* FullCalendar dark theme */
+:host ::ng-deep .fc {
   background: #1b1b1b;
   border-radius: 10px;
-  overflow: hidden;
+  padding: 8px;
 }
 
-/* HEADER (month + arrows) */
-:host ::ng-deep .mat-calendar-header {
- 
-  color: rgba(0, 188, 212, 0.55) !important;
-  padding: 10px 8px;
+:host ::ng-deep .fc .fc-toolbar-title {
+  color: #00bfa5;
+  font-weight: 500;
+  margin-left: 20px;
+  font-size: 24px;
 }
 
-/* Month label text */
-:host ::ng-deep .mat-calendar-header .mat-calendar-period-button {
-  color: rgba(0, 188, 212, 0.55) !important;
-  font-weight: 700;
+:host ::ng-deep .fc .fc-button {
+  background: rgba(0, 188, 212, 0.25);
+  border: 1px solid #00bfa5;
+  color: #fff;
 }
 
-/* Arrow buttons + icons */
-:host ::ng-deep .mat-calendar-previous-button,
-:host ::ng-deep .mat-calendar-next-button {
-  color: rgba(0, 188, 212, 0.55) !important;
+:host ::ng-deep .fc .fc-button:hover {
+  background: #00bfa5;
 }
 
-:host ::ng-deep .mat-calendar-previous-button .mat-mdc-button-persistent-ripple,
-:host ::ng-deep .mat-calendar-next-button .mat-mdc-button-persistent-ripple {
-  display: none; /* avoid odd ripple artifacts */
+:host ::ng-deep .fc .fc-col-header-cell-cushion {
+  color: #00bfa5;
+  text-decoration: none;
 }
 
-
-:host ::ng-deep .mat-calendar-table-header th {
-  color: rgba(0, 188, 212, 0.55) !important;
-  font-weight: 600;
-  opacity: 0.95;
+:host ::ng-deep .fc .fc-daygrid-day-number {
+  color: #fff;
+  text-decoration: none;
 }
 
-/* DAY NUMBERS */
-:host ::ng-deep .mat-calendar-body-cell-content {
-  color: #fff !important;       /* numbers white */
-  border-radius: 50%;
+/* Event “glow” */
+:host ::ng-deep .fc .fc-event {
+  background: #00bfa5;
+  border: 1px solid rgba(0, 188, 212, 0.95);
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 500;
 }
 
-/* Non-current month days slightly dim */
-:host ::ng-deep .mat-calendar-body-disabled .mat-calendar-body-cell-content,
-:host ::ng-deep .mat-calendar-body-cell-content.mat-calendar-body-outside-month {
-  opacity: 0.35;
+:host ::ng-deep .fc .fc-event:hover {
+  background: rgba(0, 188, 212, 0.75);
 }
 
-/* Selected day */
-:host ::ng-deep .mat-calendar-body-selected {
-  background: rgba(0, 188, 212, 0.9) !important;
-  color: #fff !important;
+/* Shrink month row height */
+:host ::ng-deep .fc .fc-daygrid-day-frame {
+  min-height: 32px;   /* try 32–40 */
+  padding: 0;
 }
 
-/* Hover day */
-:host ::ng-deep .mat-calendar-body-cell:hover .mat-calendar-body-cell-content {
-  background: rgba(0, 188, 212, 0.22);
+:host ::ng-deep .fc .fc-daygrid-day-top {
+  padding: 2px 4px;   /* tighter day number area */
 }
 
-/* ✅ Tournament day highlight (THIS makes it visible) */
-:host ::ng-deep .mat-calendar-body-cell.has-tournament .mat-calendar-body-cell-content {
-  background: rgba(0, 188, 212, 0.55) !important;
-  border: 1px solid rgba(0, 188, 212, 0.95) !important;
-  box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.18);
-  color: #fff !important;
-  font-weight: 700;
+:host ::ng-deep .fc .fc-daygrid-day-number {
+  padding: 0;         /* remove extra padding around number */
+  font-size: 12px;
 }
 
-/* Tournament day hover stronger */
-:host ::ng-deep .mat-calendar-body-cell.has-tournament:hover .mat-calendar-body-cell-content {
-  background: rgba(0, 188, 212, 0.75) !important;
+/* Make event chips smaller */
+:host ::ng-deep .fc .fc-daygrid-event {
+  margin-top: 2px;
+}
+
+:host ::ng-deep .fc .fc-event {
+  padding: 1px 4px;
+  font-size: 11px;
+  line-height: 1.2;
+  border-radius: 6px;
+}
+
+/* Optional: reduce header spacing */
+:host ::ng-deep .fc .fc-toolbar {
+  margin-bottom: 6px !important;
+}
+
+:host ::ng-deep .fc .fc-col-header-cell-cushion {
+  font-size: 11px;
+  padding: 4px 0;
 }

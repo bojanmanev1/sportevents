@@ -17,7 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
-
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { TournamentDetailsDialogComponent } from '../tournament-details-dialog/tournament-details-dialog';
 import { TournamentService, Tournament } from '../../services/tournament.service';
 
@@ -32,7 +32,8 @@ import { TournamentService, Tournament } from '../../services/tournament.service
     MatInputModule,
     MatIconModule,
     MatCardModule,
-    MatSortModule
+    MatSortModule,
+    MatPaginatorModule
   ],
   templateUrl: './events-grid.component.html',
   styleUrls: ['./events-grid.component.scss'],
@@ -45,7 +46,7 @@ export class EventsGridComponent
     private dialog: MatDialog,
     private svc: TournamentService
   ) {}
-
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   @Input() selectedSports: string[] = ['All'];
 
   @ViewChild(MatSort) sort!: MatSort;
@@ -73,7 +74,7 @@ ngOnInit() {
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
-
+this.dataSource.paginator = this.paginator;
 this.dataSource.sortingDataAccessor = (item, property) => {
   if (property === 'startDate') {
     return item.startDate?.getTime?.() ?? Number.MAX_SAFE_INTEGER;

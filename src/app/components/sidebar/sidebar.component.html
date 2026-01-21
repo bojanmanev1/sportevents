@@ -1,27 +1,9 @@
 <mat-card class="sidebar-card">
   <div class="calendar-wrap">
-    <mat-calendar
-      [selected]="selectedDate"
-      [dateClass]="dateClass"
-      (selectedChange)="onSelect($event)">
-    </mat-calendar>
-  
-    @if (hoverInfo) {
-      <div
-        class="hover-tooltip"
-        [style.left.px]="tooltipPos.x"
-        [style.top.px]="tooltipPos.y"
-      >
-        <div class="tip-date">{{ hoverInfo.date | date:'dd.MM.yyyy' }}</div>
-  
-        @for (n of hoverInfo.names; track n) {
-          <div class="tip-item">- {{ n }}</div>
-        }
-      </div>
-    }
+    <full-calendar class="fc-dark" [options]="calendarOptions"></full-calendar>
   </div>
-
 </mat-card>
+
 
 <mat-card class="sidebar-card">
   <h3>Filter by Location</h3>
