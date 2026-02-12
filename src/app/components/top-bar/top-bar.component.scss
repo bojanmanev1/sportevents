@@ -39,7 +39,7 @@
     white-space: nowrap;
     will-change: transform;
     pointer-events: auto; 
-    animation: ticker-scroll 25s linear infinite;
+    animation: ticker-scroll 35s linear infinite;
 
       .event-item {
   display: flex;
@@ -88,16 +88,24 @@
   
 }
 
-.events-ticker {
-  pointer-events: auto;
-}
+// .events-ticker {
+//   pointer-events: auto;
+// }
 
-.ticker-content {
-  pointer-events: auto;
-}
+// .ticker-content {
+//   pointer-events: auto;
+// }
 
 .events-ticker:hover .ticker-content,
 .ticker-content:hover {
-  animation:none;
   animation-play-state: paused;
+}
+
+.ticker-content {
+  animation: ticker-scroll 25s linear infinite;
+  animation-play-state: running; // explicit
+}
+
+.events-ticker:hover .ticker-content {
+  animation-play-state: paused !important;
 }
