@@ -55,5 +55,6 @@
     "name":"Name",
     "mobilephone":"Mobile phone",
     "send":"Send",
-    "description": "Description"
+    "description": "Description",
+    "registeryourtournament":"Register your tournament"
 }
