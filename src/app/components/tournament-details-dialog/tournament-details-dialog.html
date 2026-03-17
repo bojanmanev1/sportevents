@@ -2,16 +2,16 @@
     <mat-card-header>
       <mat-card-title>{{ tournament.name }}</mat-card-title>
       <mat-card-subtitle>
-        {{ tournament.sport }} • {{ tournament.location }}
+        {{ i18n.key(tournament.sport) | translate }} • {{ tournament.location }}
       </mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content class="details-content">
-      @if(tournament.discipline){ <p><strong>Discipline:</strong> {{ tournament.discipline }}</p>}
-      @if(tournament.registration){<p><strong>Registration:</strong> {{ tournament.registration }}</p>}
-      @if(tournament.fee){ <p><strong>Fee:</strong> {{ tournament.fee }}</p>}
-      @if(tournament.startDate){<p><strong>Start Date:</strong> {{ tournament.startDate | date:'dd.MM.yyyy' }}</p>}
-      @if(tournament.website){<p><strong>Website:</strong> <a style="color: rgb(226, 226, 226);" href="{{tournament.website}}" target="_blank"> {{ tournament.website }} </a></p>}
+      @if(tournament.discipline){ <p><strong>{{'discipline' | translate}}:</strong> {{ tournament.discipline }}</p>}
+      @if(tournament.registration){<p><strong>{{'registration' | translate}}:</strong> {{ tournament.registration }}</p>}
+      @if(tournament.fee){ <p><strong>{{'fee' | translate}}:</strong> {{ tournament.fee }}</p>}
+      @if(tournament.startDate){<p><strong>{{'startdate' | translate}}:</strong> {{ tournament.startDate | date:'dd.MM.yyyy' }}</p>}
+      @if(tournament.website){<p><strong>{{'website' | translate}}:</strong> <a style="color: rgb(226, 226, 226);" href="{{tournament.website}}" target="_blank"> {{ tournament.website }} </a></p>}
       @if(tournament.description){<p>{{ tournament.description }}</p>}
 
       
@@ -22,8 +22,8 @@
 
     <mat-card-actions class="details-footer">
       <button mat-raised-button color="primary" (click)="openRegisterDialog()">
-        Show Interest
+        {{'showinterest' | translate}}
       </button>
-      <button mat-button (click)="close()">Back</button>
+      <button mat-button (click)="close()">{{'back' | translate}}</button>
     </mat-card-actions>
   </mat-card>

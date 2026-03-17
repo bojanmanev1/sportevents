@@ -13,7 +13,7 @@ export class I18nService {
   }
 
   get current(): 'mk' | 'en' {
-    return (this.translate.currentLang as any) || 'mk';
+    return (this.translate.currentLang as 'mk' | 'en') || 'mk';
   }
 
   use(lang: 'mk' | 'en') {
@@ -32,9 +32,14 @@ export class I18nService {
     const normalized = text
       .trim()
       .toLowerCase()
-      .replace(/\s+/g, '')     // remove spaces
-      .replace(/[^a-z0-9]/g, ''); // remove symbols
+      .replace(/\s+/g, '')
+      .replace(/[^\p{L}\p{N}]/gu, '');
 
     return prefix ? `${prefix}.${normalized}` : normalized;
+  }
+
+  instant(text: string, prefix?: string): string {
+    const key = this.key(text, prefix);
+    return this.translate.instant(key);
   }
 }

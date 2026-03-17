@@ -47,7 +47,9 @@ export class EventsGridComponent
 
   constructor(
     private dialog: MatDialog,
-    private svc: TournamentService
+    private svc: TournamentService,
+    public i18n: I18nService
+    
   ) {}
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @Input() selectedSports: string[] = ['All'];
@@ -68,7 +70,7 @@ export class EventsGridComponent
 
 ngOnInit() {
   this.svc.getAll().subscribe(tournaments => {
-    this.allTournaments = tournaments;      // ✅ keep master copy
+    this.allTournaments = tournaments; 
     this.dataSource.data = tournaments;
     this.applyFilters();
   });

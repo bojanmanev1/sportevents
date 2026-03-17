@@ -1,27 +1,27 @@
 <div class="dialog-shell">
 
-  <h2 class="dialog-title">Register your tournament</h2>
+  <h2 class="dialog-title">{{"registeryourtournament" | translate}}</h2>
 
   <div class="dialog-body">
     <mat-form-field appearance="outline">
-      <mat-label>Event name</mat-label>
+      <mat-label>{{"event"| translate}}</mat-label>
       <input matInput [(ngModel)]="model.name" name="name" required />
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Sport</mat-label>
+      <mat-label>{{"sport" | translate}}</mat-label>
       <mat-select [(ngModel)]="model.sport" name="sport" required>
         <mat-option *ngFor="let s of sports" [value]="s">{{ s }}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Discipline</mat-label>
+      <mat-label>{{"discipline" | translate}}</mat-label>
       <input matInput [(ngModel)]="model.discipline" name="discipline"  required/>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Starting Date</mat-label>
+      <mat-label>{{"startdate" | translate}}</mat-label>
 
       <input
         matInput
@@ -37,40 +37,45 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Location</mat-label>
+      <mat-label>{{"location" | translate}}</mat-label>
       <input matInput [(ngModel)]="model.location" name="location" required />
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Registration</mat-label>
+      <mat-label>{{"registration" | translate}}</mat-label>
       <mat-select [(ngModel)]="model.registration" name="registration" required>
-        <mat-option value="Open">Open</mat-option>
-        <mat-option value="Closed">Closed</mat-option>
-        <mat-option value="Not open yet">Not open yet</mat-option>
+        <mat-option value="Open">{{"open" | translate}}</mat-option>
+        <mat-option value="Closed">{{"closed" | translate}}</mat-option>
+        <mat-option value="Not open yet">{{"notopenyet" | translate}}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Fee</mat-label>
+      <mat-label>{{"fee" | translate}}</mat-label>
       <input matInput type="text" [(ngModel)]="model.fee" name="fee" required />
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Website</mat-label>
+      <mat-label>{{"website" | translate}}</mat-label>
       <input matInput [(ngModel)]="model.website" name="website" />
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Description</mat-label>
+      <mat-label>{{"description" | translate}}</mat-label>
       <textarea matInput rows="3" [(ngModel)]="model.description" name="description"  required></textarea>
     </mat-form-field>
   </div>
 
   <div class="dialog-footer">
     <button mat-raised-button color="primary" (click)="send()" >
-      {{ sending ? 'Sending...' : 'Send' }}
+      @if(sending){
+      {{ "sending" | translate}}
+      }
+      @if(!sending){
+      {{ "send" | translate}}
+      }
     </button>
-    <button mat-button (click)="close()">Cancel</button>
+    <button mat-button (click)="close()">{{"back" | translate}}</button>
   </div>
 
 </div>

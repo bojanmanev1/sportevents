@@ -37,6 +37,23 @@
     "startdate":"Почетна дата",
     "open":"Отворена",
     "closed":"Затворена",
-    "notopenyet":"Сеуште не отворена"
-
+    "notopenyet":"Сеуште не отворена",
+    "eventsnearby":"Настани во близина",
+    "searchcitytoseenearbytournaments":"Пребарај град за да ги видиш најблиските турнири.",
+    "searchinglocation":"Локацијата се пребарува…",
+    "locationnotfound":"Локацијата не е пронајдена. Ве молиме пробајте со друг град или регион.",
+    "nolocationdata":"Сеуште нема турнири достапни на таа локација.",
+    "filterbylocation":"Филтрирај по локација",
+    "search":"Пребарај",
+    "searching":"Се пребарува...",
+    "fee":"Учество",
+    "website":"Веб-страница",
+    "showinterest":"Покажи интерес",
+    "back":"Назад",
+    "openingooglemaps":"Отвори во Google maps",
+    "registerfor":"Регистрирај се за",
+    "name":"Име",
+    "mobilephone":"Мобилен број",
+    "send":"Испрати",
+    "description":"Опис"
 }

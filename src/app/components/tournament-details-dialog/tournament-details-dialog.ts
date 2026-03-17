@@ -5,11 +5,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import * as L from 'leaflet';
 import { RegisterDialogComponent } from '../register-dialog/register-dialog.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '../../services/i18n.service';
 
 @Component({
   selector: 'app-tournament-details-dialog',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatButtonModule, MatCardModule],
+  imports: [CommonModule, MatDialogModule, MatButtonModule, MatCardModule, TranslateModule],
   templateUrl: './tournament-details-dialog.html',
   styleUrls: ['./tournament-details-dialog.scss']
 })
@@ -19,13 +21,15 @@ export class TournamentDetailsDialogComponent implements AfterViewInit {
 
   tournament: any;
   map!: L.Map;
-
+  googleMapsText:string
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<TournamentDetailsDialogComponent>,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    public i18n: I18nService
   ) {
     this.tournament = data;
+    this.googleMapsText = this.i18n.instant('openingooglemaps');
 
     const sd = this.tournament?.startDate as any;
 if (sd?.toDate) {
@@ -55,7 +59,6 @@ if (sd?.toDate) {
   });
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
   }).addTo(this.map);
 
   const googleMapsUrl = `https://www.google.com/maps?q=${this.tournament.latitude},${this.tournament.longitude}`;
@@ -67,7 +70,7 @@ L.marker(
   .addTo(this.map)
   .bindPopup(`
     <b>${this.tournament.location}</b><br>
-    <a href="${googleMapsUrl}" target="_blank">Open in Google Maps</a>
+    <a href="${googleMapsUrl}" target="_blank">${this.googleMapsText}</a>
   `)
   .openPopup();
 

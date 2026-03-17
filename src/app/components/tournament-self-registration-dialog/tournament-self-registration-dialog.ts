@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { TranslateModule } from '@ngx-translate/core';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -66,6 +66,7 @@ type SelfRegistrationModel = {
     MatCardModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    TranslateModule
   ],
   templateUrl: './tournament-self-registration-dialog.html',
   styleUrls: ['./tournament-self-registration-dialog.scss'],

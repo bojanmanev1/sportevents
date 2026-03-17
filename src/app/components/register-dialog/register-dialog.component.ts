@@ -7,11 +7,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { Firestore, collection, addDoc } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-register-dialog',
   standalone: true,
-  imports: [CommonModule, MatDialogContent, MatDialogActions, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
+  imports: [CommonModule, MatDialogContent, MatDialogActions, FormsModule, MatFormFieldModule,TranslateModule,  MatInputModule, MatButtonModule],
   templateUrl: './register-dialog.component.html',
   styleUrls: ['./register-dialog.component.scss']
 })
