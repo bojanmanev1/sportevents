@@ -7,6 +7,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { TournamentService, Tournament } from '../../services/tournament.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TournamentDetailsDialogComponent } from '../tournament-details-dialog/tournament-details-dialog';
+import { MatMenuModule } from '@angular/material/menu';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '../../services/i18n.service';
+
 @Component({
   selector: 'app-top-bar',
   standalone: true,
@@ -14,38 +18,51 @@ import { TournamentDetailsDialogComponent } from '../tournament-details-dialog/t
     CommonModule,
     MatToolbarModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatMenuModule,
+    TranslateModule // ✅ needed for | translate pipe
   ],
   templateUrl: './top-bar.component.html',
   styleUrls: ['./top-bar.component.scss'],
 })
 export class TopBarComponent implements OnInit {
-
   upcomingEvents: Tournament[] = [];
 
-  constructor(private tournamentService: TournamentService,
-    private dialog: MatDialog) {}
+  constructor(
+    private tournamentService: TournamentService,
+    private dialog: MatDialog,
+    public i18n: I18nService // ✅ inject
+  ) {}
 
- ngOnInit() {
-  this.tournamentService.getTopMenu().subscribe(events => {
-    this.upcomingEvents = events;
-  });
-}
+  ngOnInit() {
+    this.tournamentService.getTopMenu().subscribe(events => {
+      this.upcomingEvents = events;
+    });
+  }
+
+  get currentLang() {
+    return this.i18n.current;
+  }
+
+  toggleLang() {
+    this.i18n.toggle();
+  }
+
   openTournament(event: Tournament) {
     this.dialog.open(TournamentDetailsDialogComponent, {
       width: '500px',
-      maxHeight: '90vh', 
+      maxHeight: '90vh',
       data: event
     });
   }
 
-    openSelfRegistrationDialog(): void {
- this.dialog.open(TournamentSelfRegistrationDialog, {
-  width: '560px',
-  maxWidth: '95vw',
-  disableClose: false,
-  hasBackdrop: true, 
-  panelClass: 'turniri-dialog'
-});
+  openSelfRegistrationDialog(): void {
+    this.dialog.open(TournamentSelfRegistrationDialog, {
+      width: '560px',
+      maxWidth: '95vw',
+      disableClose: false,
+      hasBackdrop: true,
+      panelClass: 'turniri-dialog'
+    });
   }
 }

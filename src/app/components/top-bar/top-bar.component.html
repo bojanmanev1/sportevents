@@ -1,7 +1,7 @@
 <mat-toolbar color="primary" class="top-bar">
-  <div class="logo-section">
-    <mat-icon>sports_soccer</mat-icon>
-    <span class="app-title">Turniri.mk</span>
+  <div>
+   <img class="logo" src="assets/logo.svg" alt="Logo">
+    
   </div>
 
   <div class="events-ticker" *ngIf="upcomingEvents.length">
@@ -17,13 +17,56 @@
     </div>
   </div>
 
-<button
+  <!-- Register (translated) -->
+
+<div class="desktop-actions">
+
+
+  <button
   mat-raised-button
   color="accent"
   class="register-btn"
   (click)="openSelfRegistrationDialog()"
->
+  >
   <mat-icon>how_to_reg</mat-icon>
-  Register
+  {{ 'register' | translate }}
 </button>
+
+
+
+  <!-- Language toggle -->
+  <button
+  mat-stroked-button
+  class="lang-btn"
+  type="button"
+  (click)="toggleLang()"
+  >
+  <mat-icon>language</mat-icon>
+  {{ currentLang === 'mk' ? 'EN' : 'MK' }}
+</button>
+</div>
+
+<button
+    mat-icon-button
+    class="mobile-menu-btn"
+    [matMenuTriggerFor]="mobileMenu">
+    <mat-icon>menu</mat-icon>
+  </button>
+
 </mat-toolbar>
+
+
+<!-- Mobile dropdown -->
+<mat-menu #mobileMenu="matMenu">
+
+  <button mat-menu-item (click)="openSelfRegistrationDialog()">
+    <mat-icon>how_to_reg</mat-icon>
+    {{ 'register' | translate }}
+  </button>
+
+  <button mat-menu-item (click)="toggleLang()">
+    <mat-icon>language</mat-icon>
+    {{ currentLang === 'mk' ? 'EN' : 'MK' }}
+  </button>
+
+</mat-menu>

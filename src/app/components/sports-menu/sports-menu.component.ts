@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Output, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '../../services/i18n.service';
 @Component({
   selector: 'app-sports-menu',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule,TranslateModule],
   templateUrl: './sports-menu.component.html',
   styleUrls: ['./sports-menu.component.scss'],
 })
@@ -13,33 +14,33 @@ export class SportsMenuComponent implements OnInit {
   @Output() sportFilterChanged = new EventEmitter<string[]>();
 
   sports = [
-    { name: 'All', icon: 'emoji_events' },
-    { name: 'Animal Sports', icon: 'pets' },
-    { name: 'Athletics', icon: 'directions_run' },
-    { name: 'Badminton', icon: 'sports_tennis' },
-    { name: 'Basketball', icon: 'sports_basketball' },
-    { name: 'Billiard', icon: 'sports' },
-    { name: 'Board Sports', icon: 'surfing' },
-    { name: 'Bowling', icon: 'sports' },
-    { name: 'Combat Sports', icon: 'sports_mma' },
-    { name: 'Cycling', icon: 'directions_bike' },
-    { name: 'ESports', icon: 'sports_esports' },
-    { name: 'Football', icon: 'sports_soccer' },
-    { name: 'Golf', icon: 'sports_golf' },
-    { name: 'Gymnastics', icon: 'self_improvement' },
-    { name: 'Handball', icon: 'sports_handball' },
-    { name: 'Ice Sports', icon: 'ac_unit' },
-    { name: 'Mountain Sports', icon: 'terrain' },
-    { name: 'Padel', icon: 'sports_tennis' },
-    { name: 'Parasports', icon: 'accessible' },
-    { name: 'Ping Pong', icon: 'sports_tennis' },
-    { name: 'Racing', icon: 'sports_motorsports' },
-    { name: 'Rugby', icon: 'sports_rugby' },
-    { name: 'Tennis', icon: 'sports_tennis' },
-    { name: 'Teqball', icon: 'sports' },
-    { name: 'Volleyball', icon: 'sports_volleyball' },
-    { name: 'Water Sports', icon: 'pool' },
-    { name: 'Weapons', icon: 'sports_kabaddi' },
+    { name: 'all', icon: 'emoji_events' },
+    { name: 'animalsports', icon: 'pets' },
+    { name: 'athletics', icon: 'directions_run' },
+    { name: 'badminton', icon: 'sports_tennis' },
+    { name: 'basketball', icon: 'sports_basketball' },
+    { name: 'billiard', icon: 'sports' },
+    { name: 'boardsports', icon: 'surfing' },
+    { name: 'bowling', icon: 'sports' },
+    { name: 'combatsports', icon: 'sports_mma' },
+    { name: 'cycling', icon: 'directions_bike' },
+    { name: 'esports', icon: 'sports_esports' },
+    { name: 'football', icon: 'sports_soccer' },
+    { name: 'golf', icon: 'sports_golf' },
+    { name: 'gymnastics', icon: 'self_improvement' },
+    { name: 'handball', icon: 'sports_handball' },
+    { name: 'icesports', icon: 'ac_unit' },
+    { name: 'mountainsports', icon: 'terrain' },
+    { name: 'padel', icon: 'sports_tennis' },
+    { name: 'parasports', icon: 'accessible' },
+    { name: 'pingpong', icon: 'sports_tennis' },
+    { name: 'racing', icon: 'sports_motorsports' },
+    { name: 'rugby', icon: 'sports_rugby' },
+    { name: 'tennis', icon: 'sports_tennis' },
+    { name: 'teqball', icon: 'sports' },
+    { name: 'volleyball', icon: 'sports_volleyball' },
+    { name: 'watersports', icon: 'pool' },
+    { name: 'weapons', icon: 'sports_kabaddi' },
   ];
 
   selectedSports: string[] = ['All'];
@@ -48,6 +49,10 @@ export class SportsMenuComponent implements OnInit {
   isMobile = false;
   showAllMobile = false;
   mobileLimit = 8;
+
+   constructor(
+    public i18n: I18nService // ✅ inject
+  ) {}
 
   ngOnInit() {
     this.checkViewport();

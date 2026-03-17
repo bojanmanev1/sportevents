@@ -20,6 +20,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { TournamentDetailsDialogComponent } from '../tournament-details-dialog/tournament-details-dialog';
 import { TournamentService, Tournament } from '../../services/tournament.service';
+import { TranslateModule } from '@ngx-translate/core';
+import { I18nService } from '../../services/i18n.service';
 
 @Component({
   selector: 'app-events-grid',
@@ -33,7 +35,8 @@ import { TournamentService, Tournament } from '../../services/tournament.service
     MatIconModule,
     MatCardModule,
     MatSortModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    TranslateModule
   ],
   templateUrl: './events-grid.component.html',
   styleUrls: ['./events-grid.component.scss'],
