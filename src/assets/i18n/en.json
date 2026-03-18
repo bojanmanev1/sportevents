@@ -56,5 +56,14 @@
     "mobilephone":"Mobile phone",
     "send":"Send",
     "description": "Description",
-    "registeryourtournament":"Register your tournament"
+    "registeryourtournament":"Register your tournament",
+    "showless":"Show less sports",
+    "showmoresports":"Show more sports",
+    "entercityorregion":"Enter city",
+    "filters":"Filters",
+    "datefrom":"Date from",
+    "dateto":"Date to",
+    "apply":"Apply",
+    "clearfilters":"Clear filters",
+    "nonearbyeventswithin50km":"No nearby events within 50km"
 }

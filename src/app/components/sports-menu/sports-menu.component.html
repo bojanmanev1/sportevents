@@ -9,9 +9,12 @@
        <mat-icon>
          {{ showAllMobile ? 'expand_less' : 'expand_more' }}
        </mat-icon>
-       <span>
-         {{ showAllMobile ? 'Show less' : 'Show more sports' }}
-       </span>
+       @if(showAllMobile){
+        {{ 'showless' | translate }}
+       }
+       @if(!showAllMobile){
+        {{ 'showmoresports' | translate }}
+       }
      </button>
    }
 

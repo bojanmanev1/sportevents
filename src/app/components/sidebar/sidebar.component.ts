@@ -22,7 +22,6 @@ type FcEvent = {
   title: string;
   start: Date;
   allDay: true;
-  // custom data
   extendedProps: { tournament: Tournament };
 };
 
@@ -52,30 +51,28 @@ export class SidebarComponent implements OnInit {
     private geocoding: GeocodingService,
   ) {}
 
-  status: 'idle' | 'loading' | 'not-found' | 'no-coords' | 'ok' = 'idle';
+  status: 'idle' | 'loading' | 'not-found' | 'no-coords' | 'no-nearby' | 'ok' = 'idle';
   loading = false;
 
   location = '';
   allTournaments: Tournament[] = [];
   nearby: Tournament[] = [];
 
-  // ✅ FullCalendar config
+  private readonly maxRadiusKm = 50;
+
   calendarOptions: any = {
     plugins: [dayGridPlugin, interactionPlugin],
     initialView: 'dayGridMonth',
     height: 'auto',
-    firstDay: 1, // Monday
+    firstDay: 1,
     headerToolbar: { left: 'prev,next', center: 'title', right: '' },
 
     events: [] as FcEvent[],
 
-    // ✅ hover tooltip (simple + reliable)
     eventMouseEnter: (info: any) => {
-      // show tournament name on hover
       info.el.title = info.event.title;
     },
 
-    // ✅ open details dialog on click
     eventClick: (info: any) => {
       const t = info.event.extendedProps?.tournament as Tournament | undefined;
       if (!t) return;
@@ -92,11 +89,11 @@ export class SidebarComponent implements OnInit {
     this.tournamentService.getAll().subscribe(list => {
       this.allTournaments = list;
 
-      // rebuild calendar events
       const events: FcEvent[] = list
         .map(t => {
           const d = this.toDate((t as any).startDate);
           if (!d) return null;
+
           return {
             title: t.name,
             start: d,
@@ -106,7 +103,6 @@ export class SidebarComponent implements OnInit {
         })
         .filter(Boolean) as FcEvent[];
 
-      // update FullCalendar
       this.calendarOptions = {
         ...this.calendarOptions,
         events,
@@ -133,7 +129,9 @@ export class SidebarComponent implements OnInit {
         }
 
         const candidates = this.allTournaments.filter(
-          t => typeof (t as any).latitude === 'number' && typeof (t as any).longitude === 'number'
+          t =>
+            typeof (t as any).latitude === 'number' &&
+            typeof (t as any).longitude === 'number'
         );
 
         if (candidates.length === 0) {
@@ -153,9 +151,17 @@ export class SidebarComponent implements OnInit {
               (t as any).longitude as number
             ),
           }))
+          .filter(x => x.d <= this.maxRadiusKm)
           .sort((a, b) => a.d - b.d)
           .slice(0, 3)
           .map(x => x.t);
+
+        if (withCoords.length === 0) {
+          this.status = 'no-nearby';
+          this.nearby = [];
+          this.loading = false;
+          return;
+        }
 
         this.nearby = withCoords;
         this.status = 'ok';
@@ -172,7 +178,7 @@ export class SidebarComponent implements OnInit {
   private toDate(v: any): Date | null {
     if (!v) return null;
     if (v instanceof Date) return v;
-    if (typeof v?.toDate === 'function') return v.toDate(); // Firestore Timestamp
+    if (typeof v?.toDate === 'function') return v.toDate();
     const d = new Date(v);
     return isNaN(d.getTime()) ? null : d;
   }
@@ -181,10 +187,13 @@ export class SidebarComponent implements OnInit {
     const R = 6371;
     const dLat = this.deg2rad(lat2 - lat1);
     const dLon = this.deg2rad(lon2 - lon1);
+
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      Math.cos(this.deg2rad(lat1)) *
+        Math.cos(this.deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
 
     return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
   }
@@ -192,7 +201,7 @@ export class SidebarComponent implements OnInit {
   private deg2rad(v: number): number {
     return v * (Math.PI / 180);
   }
-  
+
   openTournamentDialog(t: Tournament) {
     this.dialog.open(TournamentDetailsDialogComponent, {
       width: '500px',

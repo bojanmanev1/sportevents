@@ -13,7 +13,7 @@ import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 })
 export class Home {
 
- selectedSports: string[] = ['All'];  // <-- required for grid input
+ selectedSports: string[] = ['all'];  // <-- required for grid input
 
   onSportsChanged(sports: string[]) {  // <-- required for menu output
     this.selectedSports = sports;

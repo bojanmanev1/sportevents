@@ -1,64 +1,54 @@
 <mat-toolbar color="primary" class="top-bar">
-  <div>
-   <img class="logo" src="assets/logo.svg" alt="Logo">
-    
-  </div>
+  <div class="top-row">
+    <div class="logo-wrap">
+      <img class="logo" src="assets/logo.svg" alt="Logo">
+    </div>
 
-  <div class="events-ticker" *ngIf="upcomingEvents.length">
-    <div class="ticker-content">
-      <div *ngFor="let event of upcomingEvents" class="event-item" (click)="openTournament(event)">
-        <mat-icon>event</mat-icon>
-        <span>
-          {{ event.name }}
-          — {{ event.location }}
-          ({{ event.startDate | date:'dd.MM.yyyy'}})
-        </span>
+    <div class="events-ticker" *ngIf="upcomingEvents.length">
+      <div class="ticker-content">
+        <div *ngFor="let event of upcomingEvents" class="event-item" (click)="openTournament(event)">
+          <mat-icon>event</mat-icon>
+          <span>
+            {{ event.name }}
+            — {{ event.location }}
+            ({{ event.startDate | date:'dd.MM.yyyy' }})
+          </span>
+        </div>
       </div>
     </div>
+
+    <div class="desktop-actions">
+      <button
+        mat-raised-button
+        color="accent"
+        class="register-btn"
+        (click)="openSelfRegistrationDialog()"
+      >
+        <mat-icon>how_to_reg</mat-icon>
+        {{ 'register' | translate }}
+      </button>
+
+      <button
+        mat-stroked-button
+        class="lang-btn"
+        type="button"
+        (click)="toggleLang()"
+      >
+        <mat-icon>language</mat-icon>
+        {{ currentLang === 'mk' ? 'EN' : 'MK' }}
+      </button>
+    </div>
+
+    <button
+      mat-icon-button
+      class="mobile-menu-btn"
+      [matMenuTriggerFor]="mobileMenu">
+      <mat-icon>menu</mat-icon>
+    </button>
   </div>
-
-  <!-- Register (translated) -->
-
-<div class="desktop-actions">
-
-
-  <button
-  mat-raised-button
-  color="accent"
-  class="register-btn"
-  (click)="openSelfRegistrationDialog()"
-  >
-  <mat-icon>how_to_reg</mat-icon>
-  {{ 'register' | translate }}
-</button>
-
-
-
-  <!-- Language toggle -->
-  <button
-  mat-stroked-button
-  class="lang-btn"
-  type="button"
-  (click)="toggleLang()"
-  >
-  <mat-icon>language</mat-icon>
-  {{ currentLang === 'mk' ? 'EN' : 'MK' }}
-</button>
-</div>
-
-<button
-    mat-icon-button
-    class="mobile-menu-btn"
-    [matMenuTriggerFor]="mobileMenu">
-    <mat-icon>menu</mat-icon>
-  </button>
-
 </mat-toolbar>
 
-
-<!-- Mobile dropdown -->
-<mat-menu #mobileMenu="matMenu">
-
+<mat-menu #mobileMenu="matMenu" panelClass="mobile-menu-panel">
   <button mat-menu-item (click)="openSelfRegistrationDialog()">
     <mat-icon>how_to_reg</mat-icon>
     {{ 'register' | translate }}
@@ -68,5 +58,4 @@
     <mat-icon>language</mat-icon>
     {{ currentLang === 'mk' ? 'EN' : 'MK' }}
   </button>
-
 </mat-menu>

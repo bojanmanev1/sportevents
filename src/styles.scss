@@ -181,3 +181,108 @@ app-root {
   padding-left: 10px !important;
   padding-right: 10px !important;
 }
+
+/* DARK DIALOG BACKGROUND */
+.dark-dialog .mat-mdc-dialog-surface {
+  background: #1e1e1e !important;
+  color: #eaeaea;
+  border-radius: 16px;
+}
+
+/* INPUT FIELDS */
+.dark-dialog .mat-mdc-form-field {
+  width: 100%;
+}
+
+/* Input text */
+.dark-dialog .mat-mdc-input-element {
+  color: #fff !important;
+}
+
+/* Labels */
+.dark-dialog .mdc-floating-label {
+  color: #bfbfbf !important;
+}
+
+/* Outline border */
+.dark-dialog .mdc-notched-outline__leading,
+.dark-dialog .mdc-notched-outline__notch,
+.dark-dialog .mdc-notched-outline__trailing {
+  border-color: #444 !important;
+}
+
+/* Focus border */
+.dark-dialog .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+.dark-dialog .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+.dark-dialog .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: #00bfa5 !important;
+}
+
+/* Select dropdown */
+.dark-dialog .mat-mdc-select-value {
+  color: #fff !important;
+}
+
+/* Datepicker toggle icon */
+.dark-dialog .mat-datepicker-toggle {
+  color: #ccc;
+}
+
+/* Buttons */
+.dark-dialog .mat-mdc-button,
+.dark-dialog .mat-mdc-stroked-button {
+  color: #eaeaea;
+  border-color: #444;
+}
+
+.dark-dialog .mat-mdc-unelevated-button {
+  background: #00bfa5;
+  color: #000;
+}
+/* Datepicker header */
+.mat-datepicker-content .mat-calendar-header {
+  background: #00bfa5 !important;
+  color: white !important;
+}
+
+/* Selected day */
+.mat-calendar-body-selected {
+  background-color: #00bfa5 !important;
+  color: white !important;
+}
+
+/* Today (circle outline) */
+.mat-calendar-body-today:not(.mat-calendar-body-selected) {
+  border-color: #00bfa5 !important;
+}
+
+/* Hover */
+.mat-calendar-body-cell:hover .mat-calendar-body-cell-content {
+  background-color: #00bfa5 !important;
+}
+
+/* Active/Focused */
+.mat-calendar-body-active {
+  background-color: #00bfa5 !important;
+}
+
+/* Month/year label */
+.mat-calendar-period-button {
+  color: #00bfa5 !important;
+}
+
+/* Arrows */
+.mat-calendar-arrow {
+  fill: #000 !important;
+}
+
+/* Month + Year text */
+.mat-calendar-period-button {
+  color: #00bfa5 !important;
+}
+
+/* Left / Right arrows */
+.mat-calendar-previous-button,
+.mat-calendar-next-button {
+  color: white !important;
+}

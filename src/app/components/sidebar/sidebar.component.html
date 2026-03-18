@@ -58,6 +58,11 @@
       {{'nolocationdata' | translate}}
     </div>
   }
+  @if (status === 'no-nearby') {
+  <div class="empty-hint">
+    {{ 'nonearbyeventswithin50km' | translate }}
+  </div>
+}
 
   @if (status === 'ok') {
     @for (t of nearby; track t.id ?? t.name) {

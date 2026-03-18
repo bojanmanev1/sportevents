@@ -56,5 +56,14 @@
     "mobilephone":"Мобилен број",
     "send":"Испрати",
     "description":"Опис",
-    "registeryourtournament":"Регистрирај го твојот турнир"
+    "registeryourtournament":"Регистрирај го твојот турнир",
+    "showless":"Прикажи помалку спортови",
+    "showmoresports":"Прикажи повеќе спортови",
+    "entercityorregion":"Внесете град",
+    "filters":"Филтри",
+    "datefrom":"Од датум",
+    "dateto":"До датум",
+    "apply":"Зачувај",
+    "clearfilters":"Исчисти филтри",
+    "nonearbyeventswithin50km":"Нема достапни настани во радиус од 50 километри"
 }

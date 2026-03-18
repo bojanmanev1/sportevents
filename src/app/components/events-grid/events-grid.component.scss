@@ -6,10 +6,18 @@
   gap: 1rem;
 }
 
-/* SEARCH */
-.search-field {
+/* TOP TOOLBAR */
+.toolbar-row {
   width: 100%;
   max-width: 1000px;
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.search-field {
+  flex: 4;
+  width: 100%;
 
   mat-label {
     color: #bfbfbf;
@@ -17,6 +25,22 @@
 
   input {
     color: #eaeaea;
+  }
+}
+
+.filter-btn {
+  flex: 1;
+  height: 56px;
+  white-space: nowrap;
+  border-color: #333 !important;
+  color: #eaeaea !important;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  mat-icon {
+    margin-right: 6px;
   }
 }
 
@@ -88,15 +112,27 @@ table {
 }
 
 /* =========================
-   MOBILE RESPONSIVE
+   TABLET / SMALL DESKTOP
    ========================= */
 @media (max-width: 768px) {
   .events-grid-container {
     padding: 1rem 0.5rem;
   }
 
-  .search-field {
+  .toolbar-row {
+    flex-direction: column;
     max-width: 100%;
+  }
+
+  .search-field {
+    flex: unset;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .filter-btn {
+    width: 100%;
+    flex: unset;
   }
 
   .events-table-card {
@@ -105,7 +141,7 @@ table {
   }
 
   table {
-    min-width: 900px; // forces horizontal scroll
+    min-width: 900px;
   }
 
   th,
@@ -118,7 +154,6 @@ table {
     font-size: 0.75rem;
   }
 
-  // /* Optional swipe hint */
   // .table-scroll::after {
   //   content: '← swipe →';
   //   display: block;
@@ -127,4 +162,8 @@ table {
   //   color: #777;
   //   padding: 0.25rem 0;
   // }
+}
+
+::ng-deep .mat-mdc-menu-panel {
+  background-color: #1e1e1e !important;
 }

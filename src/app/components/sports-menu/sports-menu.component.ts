@@ -43,7 +43,7 @@ export class SportsMenuComponent implements OnInit {
     { name: 'weapons', icon: 'sports_kabaddi' },
   ];
 
-  selectedSports: string[] = ['All'];
+  selectedSports: string[] = ['all'];
 
   /** Mobile logic */
   isMobile = false;
@@ -73,29 +73,29 @@ export class SportsMenuComponent implements OnInit {
       : this.sports.slice(0, this.mobileLimit);
   }
 
-  selectSport(sport: string) {
-    if (sport === 'All') {
-      this.selectedSports = ['All'];
-      this.sportFilterChanged.emit(this.selectedSports);
-      return;
-    }
-
-    this.selectedSports = this.selectedSports.filter(s => s !== 'All');
-
-    if (this.selectedSports.includes(sport)) {
-      this.selectedSports = this.selectedSports.filter(s => s !== sport);
-    } else {
-      this.selectedSports.push(sport);
-    }
-
-    if (this.selectedSports.length === 0) {
-      this.selectedSports = ['All'];
-    }
-
+ selectSport(sport: string) {
+  if (sport === 'all') {
+    this.selectedSports = ['all'];
     this.sportFilterChanged.emit(this.selectedSports);
+    return;
   }
 
-  isSelected(sport: string): boolean {
-    return this.selectedSports.includes(sport);
+  this.selectedSports = this.selectedSports.filter(s => s !== 'all');
+
+  if (this.selectedSports.includes(sport)) {
+    this.selectedSports = this.selectedSports.filter(s => s !== sport);
+  } else {
+    this.selectedSports.push(sport);
   }
+
+  if (this.selectedSports.length === 0) {
+    this.selectedSports = ['all'];
+  }
+
+  this.sportFilterChanged.emit(this.selectedSports);
+}
+
+ isSelected(sport: string): boolean {
+  return this.selectedSports.includes(sport);
+}
 }
