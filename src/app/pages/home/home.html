@@ -1,13 +1,18 @@
 <app-top-bar></app-top-bar>
 <app-sports-menu (sportFilterChanged)="onSportsChanged($event)"></app-sports-menu>
 
+<section class="main-layout">
+  <div class="content-area">
+    <div class="slider-section">
+      <app-home-slider></app-home-slider>
+    </div>
 
-<div class="main-layout">
-  <div class="grid-area">
-    <app-events-grid [selectedSports]="selectedSports"></app-events-grid>
+    <div class="grid-area">
+      <app-events-grid [selectedSports]="selectedSports"></app-events-grid>
+    </div>
   </div>
 
   <div class="sidebar-area">
     <app-sidebar></app-sidebar>
   </div>
-</div>
+</section>

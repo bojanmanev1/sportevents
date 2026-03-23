@@ -1,3 +1,4 @@
+import { HomeSliderComponent } from '../../components/home-slider/home-slider.component';
 import { Component } from '@angular/core';
 import { TopBarComponent } from '../../components/top-bar/top-bar.component';
 import { EventsGridComponent } from '../../components/events-grid/events-grid.component';
@@ -7,7 +8,7 @@ import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [TopBarComponent,SportsMenuComponent,EventsGridComponent, SidebarComponent],
+  imports: [TopBarComponent,SportsMenuComponent,HomeSliderComponent,EventsGridComponent, SidebarComponent],
   templateUrl: './home.html',
   styleUrls: ['./home.scss'],
 })

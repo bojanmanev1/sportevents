@@ -11,6 +11,9 @@ import { firebaseProviders } from './app/firebase.config';
 
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { register } from 'swiper/element/bundle';
+
+register();
 
 
 bootstrapApplication(App, {

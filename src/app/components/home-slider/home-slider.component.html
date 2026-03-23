@@ -1,0 +1,9 @@
+<div class="home-slider" *ngIf="slides.length">
+  <swiper-container #swiperEl init="false" class="slider-swiper">
+    <swiper-slide *ngFor="let slide of slides">
+      <div class="slide-card">
+        <img [src]="slide.imageUrl" [alt]="slide.title || 'Slide image'" />
+      </div>
+    </swiper-slide>
+  </swiper-container>
+</div>
