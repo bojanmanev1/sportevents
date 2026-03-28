@@ -1,9 +1,7 @@
 .home-slider {
   width: 100%;
   max-width: 1320px;
-  margin: 0 auto ;
-  // padding: 0 5.5rem; /* more room for outside arrows */
-  // margin-left: 10px;
+  margin: 0 auto;
   box-sizing: border-box;
   position: relative;
 }
@@ -12,21 +10,29 @@
   display: block;
   width: 100%;
   overflow: visible;
+
+  --swiper-navigation-color: #00bfa5;
+  --swiper-navigation-size: 18px;
 }
 
 swiper-slide {
- display: flex;
-  justify-content: center; /* centers each card */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .slide-card {
-  background: #1e1e1e;
+  background: #0e0e0e;
   border-radius: 16px;
-  width: 260px; 
-
+  width: 260px;
+  height: 240px;
   overflow: hidden;
-  border: 1px solid #2a2a2a;
+  // border: 1px solid #2a2a2a;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     transform: translateY(-2px);
@@ -35,10 +41,12 @@ swiper-slide {
 }
 
 .slide-card img {
-   width: 260px; 
-  height: 240px; /* smaller image */
-  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
   display: block;
+  background: #0e0e0e;
 }
 
 /* arrows */
@@ -52,12 +60,13 @@ swiper-slide {
   border: 1px solid #2a2a2a;
   border-radius: 50%;
 }
+
 :host ::ng-deep .swiper-button-prev {
-  left: -60px; /* farther outside */
+  left: -60px;
 }
 
 :host ::ng-deep .swiper-button-next {
-  right: -60px; /* farther outside */
+  right: -60px;
 }
 
 :host ::ng-deep .swiper-button-prev::after,
@@ -75,21 +84,14 @@ swiper-slide {
     padding: 0 4.5rem;
   }
 
-  .slide-card{
+  .slide-card {
+    width: 260px;
     height: 220px;
   }
 
   .slide-card img {
-    height: 220px;
+    height: 100%;
   }
-
-//   :host ::ng-deep .swiper-button-prev {
-//     left: -42px;
-//   }
-
-//   :host ::ng-deep .swiper-button-next {
-//     right: -42px;
-//   }
 }
 
 @media (max-width: 768px) {
@@ -98,9 +100,13 @@ swiper-slide {
     max-width: 100%;
   }
 
-  .slide-card img {
-      height: 240px; /* smaller image */
+  .slide-card {
+    width: 260px;
+    height: 240px;
+  }
 
+  .slide-card img {
+    height: 100%;
   }
 
   :host ::ng-deep .swiper-button-prev,
@@ -122,9 +128,4 @@ swiper-slide {
   :host ::ng-deep .swiper-button-next::after {
     font-size: 12px;
   }
-}
-
-.slider-swiper {
-  --swiper-navigation-color: #00bfa5;
-  --swiper-navigation-size: 18px;
 }
