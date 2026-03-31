@@ -166,3 +166,21 @@ table {
 ::ng-deep .mat-mdc-menu-panel {
   background-color: #1e1e1e !important;
 }
+/* Horizontal scrollbar for table */
+.table-scroll::-webkit-scrollbar {
+  height: 6px; // horizontal uses height instead of width
+}
+
+.table-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #1f1f1f, #2a2a2a);
+  border-radius: 10px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb:hover {
+  background: #00bfa5; // optional accent on hover
+}

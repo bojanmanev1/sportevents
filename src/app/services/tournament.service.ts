@@ -17,6 +17,9 @@ export interface Tournament {
   showInTopMenu?: boolean;
   latitude?: number | string | null;
   longitude?: number | string | null;
+
+  // NEW
+  status?: 'upcoming' | 'ongoing' | 'closed';
 }
 
 @Injectable({ providedIn: 'root' })
@@ -39,7 +42,6 @@ export class TournamentService {
       return null;
     };
 
-    // ✅ Normalize once here so all consumers get Date|null
     this.tournaments$ = (collectionData(ref, { idField: 'id' }) as Observable<any[]>).pipe(
       map(list =>
         list.map((t: any) => ({
@@ -47,6 +49,7 @@ export class TournamentService {
           startDate: toDate(t.startDate),
           latitude: toNum(t.latitude),
           longitude: toNum(t.longitude),
+          status: t.status ?? 'upcoming', // default for old docs that don't have status yet
         })) as Tournament[]
       ),
       shareReplay(1)
@@ -55,6 +58,51 @@ export class TournamentService {
 
   getAll(): Observable<Tournament[]> {
     return this.tournaments$;
+  }
+
+  // FOR EVENTS GRID - only tournaments not started yet
+  getUpcoming(): Observable<Tournament[]> {
+    return this.tournaments$.pipe(
+      map(list =>
+        list
+          .filter(t => t.status === 'upcoming')
+          .sort((a, b) => {
+            const at = a.startDate ? a.startDate.getTime() : Number.MAX_SAFE_INTEGER;
+            const bt = b.startDate ? b.startDate.getTime() : Number.MAX_SAFE_INTEGER;
+            return at - bt;
+          })
+      )
+    );
+  }
+
+  // FOR LATER
+  getOngoing(): Observable<Tournament[]> {
+    return this.tournaments$.pipe(
+      map(list =>
+        list
+          .filter(t => t.status === 'ongoing')
+          .sort((a, b) => {
+            const at = a.startDate ? a.startDate.getTime() : Number.MAX_SAFE_INTEGER;
+            const bt = b.startDate ? b.startDate.getTime() : Number.MAX_SAFE_INTEGER;
+            return at - bt;
+          })
+      )
+    );
+  }
+
+  // FOR LATER
+  getClosed(): Observable<Tournament[]> {
+    return this.tournaments$.pipe(
+      map(list =>
+        list
+          .filter(t => t.status === 'closed')
+          .sort((a, b) => {
+            const at = a.startDate ? a.startDate.getTime() : Number.MAX_SAFE_INTEGER;
+            const bt = b.startDate ? b.startDate.getTime() : Number.MAX_SAFE_INTEGER;
+            return bt - at;
+          })
+      )
+    );
   }
 
   getTopMenu(): Observable<Tournament[]> {
@@ -72,9 +120,9 @@ export class TournamentService {
     );
   }
 }
+
 const toNum = (v: any): number | null => {
   if (v === null || v === undefined || v === '') return null;
   const n = typeof v === 'number' ? v : parseFloat(v);
   return Number.isFinite(n) ? n : null;
 };
-

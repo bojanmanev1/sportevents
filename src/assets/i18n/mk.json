@@ -27,7 +27,7 @@
     "volleyball": "Одбојка",
     "watersports": "Спортови на вода",
     "weapons": "Спортови со оружје",
-    "searchevents":"Пребарај евенти",
+    "searchevents":"Пребарај настани",
     "typeeventname":"Напиши го името на евентот...",
     "event":"Настан",
     "sport":"Спорт",
@@ -65,5 +65,9 @@
     "dateto":"До датум",
     "apply":"Зачувај",
     "clearfilters":"Исчисти филтри",
-    "nonearbyeventswithin50km":"Нема достапни настани во радиус од 50 километри"
+    "nonearbyeventswithin50km":"Нема достапни настани во радиус од 50 километри",
+    "noclosedtournaments":"Нема завршени настани",
+    "closedtournaments":"Завршени настани",
+    "noongoingtournaments":"Нема настани во тек",
+    "ongoingtournaments":"Настани во тек"
 }

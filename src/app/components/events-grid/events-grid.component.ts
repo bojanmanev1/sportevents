@@ -85,33 +85,41 @@ export class EventsGridComponent implements OnInit, AfterViewInit, OnChanges {
   dataSource = new MatTableDataSource<Tournament>([]);
 
   ngOnInit() {
-    this.svc.getAll().subscribe(tournaments => {
+    this.svc.getUpcoming().subscribe(tournaments => {
       this.allTournaments = tournaments;
       this.dataSource.data = tournaments;
       this.applyFilters();
     });
   }
 
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
+ngAfterViewInit() {
+  this.dataSource.sort = this.sort;
+  this.dataSource.paginator = this.paginator;
 
-    this.dataSource.sortingDataAccessor = (item, property) => {
-      if (property === 'startDate') {
-        return item.startDate?.getTime?.() ?? Number.MAX_SAFE_INTEGER;
-      }
+  this.dataSource.sortingDataAccessor = (item, property) => {
+    if (property === 'startDate') {
+      return item.startDate?.getTime?.() ?? Number.MAX_SAFE_INTEGER;
+    }
 
-      if (property === 'sport') {
-        return this.i18n.key(item.sport ?? '');
-      }
+    if (property === 'sport') {
+      return this.i18n.key(item.sport ?? '');
+    }
 
-      if (property === 'registration') {
-        return this.i18n.key(item.registration ?? '');
-      }
+    if (property === 'registration') {
+      return this.i18n.key(item.registration ?? '');
+    }
 
-      return ((item as any)[property] ?? '').toString().toLowerCase();
-    };
-  }
+    return ((item as any)[property] ?? '').toString().toLowerCase();
+  };
+
+  // default sort: closest date first
+  this.sort.active = 'startDate';
+  this.sort.direction = 'asc';
+  this.sort.sortChange.emit({
+    active: 'startDate',
+    direction: 'asc'
+  });
+}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['selectedSports']) {

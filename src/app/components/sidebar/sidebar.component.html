@@ -1,80 +1,122 @@
-<!-- <mat-card class="sidebar-card">
-  <div class="calendar-wrap">
-    <full-calendar class="fc-dark" [options]="calendarOptions"></full-calendar>
-  </div>
-</mat-card> -->
-
-
+<!-- SEARCH / NEARBY CARD -->
 <mat-card class="sidebar-card">
-  <h3>{{'filterbylocation' | translate}}</h3>
+  <h3>{{ 'filterbylocation' | translate }}</h3>
 
   <mat-form-field appearance="outline" class="sidebar-field">
-    <mat-label>{{'location' | translate}}</mat-label>
+    <mat-label>{{ 'location' | translate }}</mat-label>
     <input
       matInput
-      placeholder="{{'entercityorregion' | translate}}"
+      placeholder="{{ 'entercityorregion' | translate }}"
       [(ngModel)]="location"
     />
     <mat-icon matSuffix>place</mat-icon>
   </mat-form-field>
 
-<button mat-flat-button color="primary" class="search-button" (click)="onSearch()" [disabled]="loading">
-  <mat-icon>search</mat-icon>
-  @if (loading) {
-    {{ 'searching' | translate }}
-  }
-  @if(!loading) {
-    {{ 'search' | translate }}
-
-  }
-</button>
+  <button
+    mat-flat-button
+    color="primary"
+    class="search-button"
+    (click)="onSearch()"
+    [disabled]="loading"
+  >
+    <mat-icon>search</mat-icon>
+    @if (loading) {
+      {{ 'searching' | translate }}
+    }
+    @if (!loading) {
+      {{ 'search' | translate }}
+    }
+  </button>
 
   <div class="divider"></div>
 
-<mat-nav-list class="event-list">
-  <h4>{{'eventsnearby' | translate}}</h4>
+  <mat-nav-list class="event-list">
+    <h4>{{ 'eventsnearby' | translate }}</h4>
 
-  @if (status === 'idle') {
-    <div class="empty-hint">
-      {{'searchcitytoseenearbytournaments' | translate}}
-    </div>
-  }
+    @if (status === 'idle') {
+      <div class="empty-hint">
+        {{ 'searchcitytoseenearbytournaments' | translate }}
+      </div>
+    }
 
-  @if (status === 'loading') {
-    <div class="empty-hint loader-row">
-      <mat-progress-spinner diameter="22" mode="indeterminate"></mat-progress-spinner>
-      <span>{{'searchinglocation' | translate}}</span>
-    </div>
-  }
+    @if (status === 'loading') {
+      <div class="empty-hint loader-row">
+        <mat-progress-spinner diameter="22" mode="indeterminate"></mat-progress-spinner>
+        <span>{{ 'searchinglocation' | translate }}</span>
+      </div>
+    }
 
-  @if (status === 'not-found') {
-    <div class="empty-hint">
-      {{'locationnotfound' | translate}}
-    </div>
-  }
+    @if (status === 'not-found') {
+      <div class="empty-hint">
+        {{ 'locationnotfound' | translate }}
+      </div>
+    }
 
-  @if (status === 'no-coords') {
-    <div class="empty-hint">
-      {{'nolocationdata' | translate}}
-    </div>
-  }
-  @if (status === 'no-nearby') {
-  <div class="empty-hint">
-    {{ 'nonearbyeventswithin50km' | translate }}
-  </div>
-}
+    @if (status === 'no-coords') {
+      <div class="empty-hint">
+        {{ 'nolocationdata' | translate }}
+      </div>
+    }
 
-  @if (status === 'ok') {
-    @for (t of nearby; track t.id ?? t.name) {
+    @if (status === 'no-nearby') {
+      <div class="empty-hint">
+        {{ 'nonearbyeventswithin50km' | translate }}
+      </div>
+    }
+
+    @if (status === 'ok') {
+      @for (t of nearby; track t.id ?? t.name) {
+        <a class="event-item" mat-list-item (click)="openTournamentDialog(t)">
+          <span matLine>{{ t.name }}</span>
+          <span matLine class="secondary">
+            {{ t.location }} • {{ t.sport | translate }}
+          </span>
+        </a>
+      }
+    }
+  </mat-nav-list>
+</mat-card>
+
+<!-- ONGOING CARD -->
+<mat-card class="sidebar-card">
+  <h3>{{"ongoingtournaments" | translate}}</h3>
+
+  <mat-nav-list class="event-list scroll-list">
+    @if (!ongoingTournaments.length) {
+      <div class="empty-hint">
+        {{"noongoingtournaments" | translate}}
+      </div>
+    }
+
+    @for (t of ongoingTournaments; track t.id ?? t.name) {
       <a class="event-item" mat-list-item (click)="openTournamentDialog(t)">
         <span matLine>{{ t.name }}</span>
         <span matLine class="secondary">
-          {{ t.location }} • {{ t.sport }}
+          {{ t.location }} • {{ t.sport | translate}}
         </span>
       </a>
     }
-  }
-</mat-nav-list>
+  </mat-nav-list>
+</mat-card>
 
+<!-- CLOSED CARD -->
+<mat-card class="sidebar-card">
+  <h3>{{"closedtournaments" | translate}}</h3>
 
+  <mat-nav-list class="event-list scroll-list">
+    @if (!closedTournaments.length) {
+      <div class="empty-hint">
+       {{ "noclosedtournaments" | translate}}
+      </div>
+    }
+
+    @for (t of closedTournaments; track t.id ?? t.name) {
+      <a class="event-item" mat-list-item (click)="openTournamentDialog(t)">
+        <span matLine>{{ t.name }}</span>
+        <span matLine class="secondary">
+          {{ t.location }} • {{ t.sport | translate }}
+        </span>
+      </a>
+    }
+  </mat-nav-list>
 </mat-card>

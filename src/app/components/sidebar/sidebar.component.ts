@@ -58,6 +58,10 @@ export class SidebarComponent implements OnInit {
   allTournaments: Tournament[] = [];
   nearby: Tournament[] = [];
 
+  // NEW
+  ongoingTournaments: Tournament[] = [];
+  closedTournaments: Tournament[] = [];
+
   private readonly maxRadiusKm = 50;
 
   calendarOptions: any = {
@@ -85,30 +89,38 @@ export class SidebarComponent implements OnInit {
     },
   };
 
-  ngOnInit(): void {
-    this.tournamentService.getAll().subscribe(list => {
-      this.allTournaments = list;
+ ngOnInit(): void {
+  this.tournamentService.getAll().subscribe(list => {
+    this.allTournaments = list;
 
-      const events: FcEvent[] = list
-        .map(t => {
-          const d = this.toDate((t as any).startDate);
-          if (!d) return null;
+    const events: FcEvent[] = list
+      .map(t => {
+        const d = this.toDate((t as any).startDate);
+        if (!d) return null;
 
-          return {
-            title: t.name,
-            start: d,
-            allDay: true,
-            extendedProps: { tournament: t },
-          } as FcEvent;
-        })
-        .filter(Boolean) as FcEvent[];
+        return {
+          title: t.name,
+          start: d,
+          allDay: true,
+          extendedProps: { tournament: t },
+        } as FcEvent;
+      })
+      .filter(Boolean) as FcEvent[];
 
-      this.calendarOptions = {
-        ...this.calendarOptions,
-        events,
-      };
-    });
-  }
+    this.calendarOptions = {
+      ...this.calendarOptions,
+      events,
+    };
+  });
+
+  this.tournamentService.getOngoing().subscribe(list => {
+    this.ongoingTournaments = list;
+  });
+
+  this.tournamentService.getClosed().subscribe(list => {
+    this.closedTournaments = list;
+  });
+}
 
   onSearch() {
     this.nearby = [];

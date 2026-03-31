@@ -65,5 +65,9 @@
     "dateto":"Date to",
     "apply":"Apply",
     "clearfilters":"Clear filters",
-    "nonearbyeventswithin50km":"No nearby events within 50km"
+    "nonearbyeventswithin50km":"No nearby events within 50km",
+    "noclosedtournaments":"No closed tournaments",
+    "closedtournaments":"Closed tournaments",
+    "noongoingtournaments":"No ongoing tournaments",
+    "ongoingtournaments":"Ongoing tournaments"
 }
