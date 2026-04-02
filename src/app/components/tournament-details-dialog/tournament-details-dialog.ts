@@ -37,11 +37,11 @@ if (sd?.toDate) {
 }
   }
 
-  ngAfterViewInit(): void {
-    if (!this.tournament.latitude || !this.tournament.longitude) return;
+ ngAfterViewInit(): void {
+  if (this.tournament.latitude == null || this.tournament.longitude == null) return;
 
-    this.initMap();
-  }
+  this.initMap();
+}
 
  initMap() {
   // 1. CUSTOM ICON

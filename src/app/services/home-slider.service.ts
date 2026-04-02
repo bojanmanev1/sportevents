@@ -9,6 +9,7 @@ export interface HomeSlide {
   imageUrl: string;
   order: number;
   active: boolean;
+  tournamentId: string 
 }
 
 @Injectable({ providedIn: 'root' })

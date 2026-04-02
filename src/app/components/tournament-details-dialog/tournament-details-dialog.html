@@ -8,15 +8,16 @@
 
     <mat-card-content class="details-content">
       @if(tournament.discipline){ <p><strong>{{'discipline' | translate}}:</strong> {{ tournament.discipline }}</p>}
-      @if(tournament.registration){<p><strong>{{'registration' | translate}}:</strong> {{ tournament.registration }}</p>}
+      @if(tournament.registration){<p><strong>{{'registration' | translate}}:</strong> {{ i18n.key(tournament.registration) | translate }}</p>}
       @if(tournament.fee){ <p><strong>{{'fee' | translate}}:</strong> {{ tournament.fee }}</p>}
       @if(tournament.startDate){<p><strong>{{'startdate' | translate}}:</strong> {{ tournament.startDate | date:'dd.MM.yyyy' }}</p>}
       @if(tournament.website){<p><strong>{{'website' | translate}}:</strong> <a style="color: rgb(226, 226, 226);" href="{{tournament.website}}" target="_blank"> {{ tournament.website }} </a></p>}
-      @if(tournament.description){<p>{{ tournament.description }}</p>}
+      @if(tournament.description){<p [innerHTML]="tournament.description"></p>}
 
       
-      @if(tournament.latitude){<div class="map-placeholder" #mapContainer></div>}
-
+     @if(tournament.latitude != null && tournament.longitude != null){
+  <div class="map-placeholder" #mapContainer></div>
+}
       
     </mat-card-content>
 
