@@ -5,5 +5,6 @@ export const firebaseConfig = {
   projectId: "sportevents-6bd35",
   storageBucket: "sportevents-6bd35.firebasestorage.app",
   messagingSenderId: "686006507738",
-  appId: "1:686006507738:web:0bf17a6e720978e965ade3"
+  appId: "1:686006507738:web:0bf17a6e720978e965ade3",
+  measurementId: "G-BDJP8PZB2F"
 };

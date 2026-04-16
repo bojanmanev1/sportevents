@@ -13,8 +13,23 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { register } from 'swiper/element/bundle';
 
+import { getApp } from 'firebase/app';
+import { getAnalytics, isSupported } from 'firebase/analytics';
+
 register();
 
+// Initialize Firebase Analytics only in supported browser environments
+isSupported().then((supported) => {
+  if (supported) {
+    try {
+      const app = getApp();
+      getAnalytics(app);
+      console.log('Firebase Analytics initialized');
+    } catch (error) {
+      console.error('Firebase Analytics init failed:', error);
+    }
+  }
+});
 
 bootstrapApplication(App, {
   ...appConfig,
