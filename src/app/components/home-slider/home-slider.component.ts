@@ -54,7 +54,6 @@ export class HomeSliderComponent implements OnInit, AfterViewInit {
   }
 
   openSlide(slide: HomeSlide): void {
-    debugger
     if (!slide.tournamentId) return;
 
     const tournament = this.tournaments.find(t => t.id === slide.tournamentId);

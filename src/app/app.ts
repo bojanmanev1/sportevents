@@ -10,5 +10,5 @@ import { MatAutocomplete } from '@angular/material/autocomplete';
   styleUrl: './app.scss'
 })
 export class App {
-  protected readonly title = signal('sportevents');
+  protected readonly title = signal('Turniri.mk');
 }

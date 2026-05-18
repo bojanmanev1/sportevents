@@ -127,88 +127,142 @@ ngAfterViewInit() {
     }
   }
 
-  applyFilters() {
-    let list = [...this.allTournaments];
-    const selected = this.selectedSports?.length ? this.selectedSports : ['all'];
+applyFilters() {
+  let list = [...this.allTournaments];
+  const selected = this.selectedSports?.length ? this.selectedSports : ['all'];
 
-    // 1. Sport filter from top menu
-    if (!selected.includes('all')) {
-      list = list.filter(e => {
-        const sportKey = this.i18n.key(e.sport);
-        return selected.includes(sportKey);
-      });
-    }
+  const normalizeSearch = (value: string): string => {
+      const map: Record<string, string> = {
+    а: 'a',
+    б: 'b',
+    в: 'v',
+    г: 'g',
+    д: 'd',
+    ѓ: 'g',
+    е: 'e',
+    ж: 'z',
+    з: 'z',
+    ѕ: 'dz',
+    и: 'i',
+    ј: 'j',
+    к: 'k',
+    л: 'l',
+    љ: 'l',
+    м: 'm',
+    н: 'n',
+    њ: 'n',
+    о: 'o',
+    п: 'p',
+    р: 'r',
+    с: 's',
+    т: 't',
+    ќ: 'k',
+    у: 'u',
+    ф: 'f',
+    х: 'h',
+    ц: 'c',
+    ч: 'c',
+    џ: 'dz',
+    ш: 's'
+  };
 
-    // 2. Search filter
-    const text = this.searchText.toLowerCase().trim();
-    if (text) {
-      list = list.filter(e => {
-        const startDateText = e.startDate
-          ? e.startDate.toLocaleDateString('mk-MK')
-          : '';
+   return (value ?? '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/kj/g, 'k')
+    .replace(/gj/g, 'g')
+    .replace(/ch/g, 'c')
+    .replace(/sh/g, 's')
+    .replace(/zh/g, 'z')
+    .replace(/lj/g, 'l')
+    .replace(/nj/g, 'n')
+    .split('')
+    .map(ch => map[ch] ?? ch)
+    .join('')
+    .replace(/\s+/g, ' ')
+    .trim();
+  };
 
-        return (
-          (
-            (e.name ?? '') + ' ' +
-            (e.sport ?? '') + ' ' +
-            (e.discipline ?? '') + ' ' +
-            (e.location ?? '') + ' ' +
-            (e.registration ?? '') + ' ' +
-            startDateText
-          )
-            .toLowerCase()
-            .includes(text)
-        );
-      });
-    }
-
-    // 3. Location filter
-    const location = this.locationFilter.toLowerCase().trim();
-    if (location) {
-      list = list.filter(e =>
-        (e.location ?? '').toLowerCase().includes(location)
-      );
-    }
-
-    // 4. Discipline filter
-    const discipline = this.disciplineFilter.toLowerCase().trim();
-    if (discipline) {
-      list = list.filter(e =>
-        (e.discipline ?? '').toLowerCase().includes(discipline)
-      );
-    }
-
-    // 5. Registration filter
-    if (this.registrationFilter !== 'all') {
-      list = list.filter(e =>
-        this.i18n.key(e.registration ?? '') === this.registrationFilter
-      );
-    }
-
-    // 6. Date from
-    if (this.dateFrom) {
-      const from = this.startOfDay(this.dateFrom).getTime();
-      list = list.filter(e => {
-        if (!e.startDate) return false;
-        return e.startDate.getTime() >= from;
-      });
-    }
-
-    // 7. Date to
-    if (this.dateTo) {
-      const to = this.endOfDay(this.dateTo).getTime();
-      list = list.filter(e => {
-        if (!e.startDate) return false;
-        return e.startDate.getTime() <= to;
-      });
-    }
-
-    this.dataSource.data = list;
-
-    if (this.paginator) {
-      this.paginator.firstPage();
-    }
+  // 1. Sport filter from top menu
+  if (!selected.includes('all')) {
+    list = list.filter(e => {
+      const sportKey = this.i18n.key(e.sport);
+      return selected.includes(sportKey);
+    });
   }
+
+  // 2. Search filter - works Latin <-> Cyrillic
+  const text = normalizeSearch(this.searchText);
+
+  if (text) {
+    list = list.filter(e => {
+      const startDateText = e.startDate
+        ? e.startDate.toLocaleDateString('mk-MK')
+        : '';
+
+      const searchable = normalizeSearch(
+        (e.name ?? '') + ' ' +
+        (e.sport ?? '') + ' ' +
+        (e.discipline ?? '') + ' ' +
+        (e.location ?? '') + ' ' +
+        (e.registration ?? '') + ' ' +
+        this.i18n.key(e.sport ?? '') + ' ' +
+        this.i18n.key(e.registration ?? '') + ' ' +
+        startDateText
+      );
+
+      return searchable.includes(text);
+    });
+  }
+
+  // 3. Location filter
+  const location = normalizeSearch(this.locationFilter);
+  if (location) {
+    list = list.filter(e =>
+      normalizeSearch(e.location ?? '').includes(location)
+    );
+  }
+
+  // 4. Discipline filter
+  const discipline = normalizeSearch(this.disciplineFilter);
+  if (discipline) {
+    list = list.filter(e =>
+      normalizeSearch(e.discipline ?? '').includes(discipline)
+    );
+  }
+
+  // 5. Registration filter
+  if (this.registrationFilter !== 'all') {
+    list = list.filter(e =>
+      this.i18n.key(e.registration ?? '') === this.registrationFilter
+    );
+  }
+
+  // 6. Date from
+  if (this.dateFrom) {
+    const from = this.startOfDay(this.dateFrom).getTime();
+    list = list.filter(e => {
+      if (!e.startDate) return false;
+      return e.startDate.getTime() >= from;
+    });
+  }
+
+  // 7. Date to
+  if (this.dateTo) {
+    const to = this.endOfDay(this.dateTo).getTime();
+    list = list.filter(e => {
+      if (!e.startDate) return false;
+      return e.startDate.getTime() <= to;
+    });
+  }
+
+  this.dataSource.data = list;
+
+  if (this.paginator) {
+    this.paginator.firstPage();
+  }
+}
 
   clearFilters() {
     this.searchText = '';

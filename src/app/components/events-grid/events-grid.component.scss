@@ -104,7 +104,7 @@ table {
   height: 40px;
   cursor: pointer;
   transition: background-color 0.2s ease;
-
+  background-color: #1b1b1b;
   &:hover {
     background-color: rgba(255, 255, 255, 0.08);
   }
@@ -183,4 +183,7 @@ table {
 
 .table-scroll::-webkit-scrollbar-thumb:hover {
   background: #00bfa5; // optional accent on hover
+}
+::ng-deep .mat-mdc-row .mat-mdc-cell {
+  border-bottom: 1px solid #0e0e0e !important;
 }
