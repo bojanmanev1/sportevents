@@ -38,11 +38,11 @@
   text-transform: none;
 
   span,
-  mat-icon {
+  mat-icon, i {
     transform: skew(15deg);
   }
 
-  mat-icon {
+  mat-icon , i{
     font-size: 18px;
     margin-right: 6px;
     color: #00bfa5;
@@ -58,7 +58,7 @@
     color: #121212;
     border-color: #00bfa5;
 
-    mat-icon {
+    mat-icon , i {
       color: #121212;
     }
   }
@@ -83,7 +83,7 @@
 
     cursor: pointer;
 
-    mat-icon {
+    mat-icon, i {
       font-size: 18px;
       line-height: 1;
     }
@@ -105,7 +105,7 @@
     transform: none;
 
     span,
-    mat-icon {
+    mat-icon, i {
       transform: none;
     }
   }

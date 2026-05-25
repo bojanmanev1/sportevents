@@ -26,7 +26,13 @@
         [ngClass]="{ active: isSelected(sport.name) }"
         class="sport-button"
       >
-        <mat-icon>{{ sport.icon }}</mat-icon>
+        @if (sport.iconType === 'material') {
+          <mat-icon>{{ sport.icon }}</mat-icon>
+        }
+
+        @if (sport.iconType === 'fa') {
+          <i style="color:#00bfa5" [class]="sport.icon"></i>
+        }
         <span>{{ sport.name | translate}}</span>
       </button>
     }

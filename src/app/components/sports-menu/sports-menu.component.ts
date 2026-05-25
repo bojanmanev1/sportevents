@@ -14,33 +14,141 @@ export class SportsMenuComponent implements OnInit {
   @Output() sportFilterChanged = new EventEmitter<string[]>();
 
 sports = [
-  { name: 'all', icon: 'emoji_events' },
-  { name: 'animalsports', icon: 'pets' },
-  { name: 'athletics', icon: 'directions_run' },
-  { name: 'badminton', icon: 'sports_tennis' },
-  { name: 'basketball', icon: 'sports_basketball' },
-  { name: 'billiard', icon: 'sports' },
-  { name: 'boardsports', icon: 'surfing' },
-  { name: 'bowling', icon: 'sports' },
-  { name: 'combatsports', icon: 'sports_mma' },
-  { name: 'cycling', icon: 'directions_bike' },
-  { name: 'esports', icon: 'sports_esports' },
-  { name: 'football', icon: 'sports_soccer' },
-  { name: 'gymnastics', icon: 'self_improvement' },
-  { name: 'handball', icon: 'sports_handball' },
-  { name: 'icesports', icon: 'ac_unit' },
-  { name: 'mountainsports', icon: 'terrain' },
-  { name: 'padel', icon: 'sports_tennis' },
-  { name: 'parasports', icon: 'accessible' },
-  { name: 'pingpong', icon: 'sports_tennis' },
-  { name: 'racing', icon: 'sports_motorsports' },
-  { name: 'rugby', icon: 'sports_rugby' },
-  { name: 'tennis', icon: 'sports_tennis' },
-  { name: 'teqball', icon: 'sports' },
-  { name: 'triathlon', icon: 'directions_run' },
-  { name: 'volleyball', icon: 'sports_volleyball' },
-  { name: 'watersports', icon: 'pool' },
-  { name: 'weapons', icon: 'sports_kabaddi' },
+  {
+    name: 'all',
+    iconType: 'material',
+    icon: 'emoji_events'
+  },
+  {
+    name: 'animalsports',
+    iconType: 'material',
+    icon: 'pets'
+  },
+  {
+    name: 'athletics',
+    iconType: 'material',
+    icon: 'directions_run'
+  },
+  {
+    name: 'badminton',
+    iconType: 'material',
+    icon: 'sports_tennis'
+  },
+  {
+    name: 'basketball',
+    iconType: 'material',
+    icon: 'sports_basketball'
+  },
+  {
+    name: 'billiard',
+    iconType: 'material',
+    icon: 'sports'
+  },
+  {
+    name: 'boardsports',
+    iconType: 'fa',
+    icon: 'fa-solid fa-person-snowboarding'
+  },
+  {
+    name: 'bowling',
+    iconType: 'fa',
+    icon: 'fa-solid fa-bowling-ball'
+  },
+  {
+    name: 'combatsports',
+    iconType: 'material',
+    icon: 'sports_mma'
+  },
+  {
+    name: 'cycling',
+    iconType: 'material',
+    icon: 'directions_bike'
+  },
+  {
+    name: 'esports',
+    iconType: 'material',
+    icon: 'sports_esports'
+  },
+  {
+    name: 'football',
+    iconType: 'material',
+    icon: 'sports_soccer'
+  },
+  {
+    name: 'gymnastics',
+    iconType: 'material',
+    icon: 'self_improvement'
+  },
+  {
+    name: 'handball',
+    iconType: 'material',
+    icon: 'sports_handball'
+  },
+  {
+    name: 'icesports',
+    iconType: 'material',
+    icon: 'ac_unit'
+  },
+  {
+    name: 'mountainsports',
+    iconType: 'material',
+    icon: 'terrain'
+  },
+  {
+    name: 'padel',
+    iconType: 'fa',
+    icon: 'fa-solid fa-table-tennis-paddle-ball'
+  },
+  {
+    name: 'parasports',
+    iconType: 'material',
+    icon: 'accessible'
+  },
+  {
+    name: 'pingpong',
+    iconType: 'fa',
+    icon: 'fa-solid fa-table-tennis-paddle-ball'
+  },
+  {
+    name: 'racing',
+    iconType: 'material',
+    icon: 'sports_motorsports'
+  },
+  {
+    name: 'rugby',
+    iconType: 'material',
+    icon: 'sports_rugby'
+  },
+  {
+    name: 'tennis',
+    iconType: 'material',
+    icon: 'sports_tennis'
+  },
+  {
+    name: 'teqball',
+    iconType: 'material',
+    icon: 'sports'
+  },
+  {
+    name: 'triathlon',
+    iconType: 'material',
+    icon: 'directions_run'
+  },
+  {
+    name: 'volleyball',
+    iconType: 'material',
+    icon: 'sports_volleyball'
+  },
+  {
+    name: 'watersports',
+    iconType: 'material',
+    icon: 'pool'
+  },
+  {
+    name: 'weapons',
+    iconType: 'material',
+    icon: 'sports_kabaddi'
+  }
 ];
 
   selectedSports: string[] = ['all'];
