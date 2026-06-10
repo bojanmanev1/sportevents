@@ -84,8 +84,12 @@ export class HomeSliderComponent implements OnInit, AfterViewInit {
             disableOnInteraction: false
           }
         : false,
-      breakpoints: {
+        breakpoints: {
         768: {
+          slidesPerView: 2,
+          spaceBetween: 30
+        },
+        1100: {
           slidesPerView: 3,
           spaceBetween: 40
         }
@@ -168,12 +172,16 @@ export class HomeSliderComponent implements OnInit, AfterViewInit {
           disableOnInteraction: false
         }
       : false;
-    el.swiper.params.breakpoints = {
-      768: {
-        slidesPerView: 3,
-        spaceBetween: 40
-      }
-    };
+      el.swiper.params.breakpoints = {
+        768: {
+          slidesPerView: 2,
+          spaceBetween: 30
+        },
+        1100: {
+          slidesPerView: 3,
+          spaceBetween: 40
+        }
+      };
     el.swiper.params.injectStyles = params.injectStyles;
 
     el.swiper.update();
