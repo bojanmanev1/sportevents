@@ -71,21 +71,28 @@
         </ng-container>
 
         <!-- Registration -->
-        <ng-container matColumnDef="registration">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            {{ 'registration' | translate }}
-          </th>
-          <td mat-cell *matCellDef="let e">
-            <span
-              class="status"
-              [class.open]="e.registration === 'Open'"
-              [class.closed]="e.registration === 'Closed'"
-              [class.notOpenYet]="e.registration === 'Not open yet'"
-            >
-              {{ i18n.key(e.registration) | translate }}
-            </span>
-          </td>
-        </ng-container>
+<ng-container matColumnDef="registration">
+  <th mat-header-cell *matHeaderCellDef mat-sort-header>
+    {{ 'registration' | translate }}
+  </th>
+  <td mat-cell *matCellDef="let e">
+    @let res = getRegistrationData(e);
+    
+    <span
+      class="status"
+      [class.open]="res.key === 'Open' || res.key === 'OpenWithHours'"
+      [class.closed]="res.key === 'Closed'"
+      [class.notOpenYet]="res.key === 'Not open yet'"
+      [class.urgent]="res.key === 'OpenWithHours'"
+    >
+      @if (res.key === 'OpenWithHours') {
+        {{ 'open' | translate }} ( {{ 'remaining' | translate }} {{ res.hours }}{{'h' | translate}} )
+      } @else {
+        {{ i18n.key(res.key) | translate }}
+      }
+    </span>
+  </td>
+</ng-container>
 
         <!-- Start Date -->
         <ng-container matColumnDef="startDate">

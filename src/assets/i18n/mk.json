@@ -37,6 +37,7 @@
     "registration":"Пријавување",
     "startdate":"Почетна дата",
     "open":"Отворено",
+    "remaining": "преостануваат",
     "closed":"Затворено",
     "notopenyet":"Сѐуште не",
     "eventsnearby":"Настани во близина",
@@ -70,5 +71,6 @@
     "noclosedtournaments":"Нема завршени настани",
     "closedtournaments":"Завршени настани",
     "noongoingtournaments":"Нема настани во тек",
-    "ongoingtournaments":"Настани во тек"
+    "ongoingtournaments":"Настани во тек",
+    "h":"ч"
 }

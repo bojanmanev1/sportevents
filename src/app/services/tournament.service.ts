@@ -9,7 +9,7 @@ export interface Tournament {
   sport: string;
   discipline?: string;
   location?: string;
-  registration?: 'Open' | 'Closed' | 'Not open yet';
+  registration?: Date | any | null;
   description?: string;
   startDate?: Date | null;
   website?: string;
@@ -42,18 +42,19 @@ export class TournamentService {
       return null;
     };
 
-    this.tournaments$ = (collectionData(ref, { idField: 'id' }) as Observable<any[]>).pipe(
-      map(list =>
-        list.map((t: any) => ({
-          ...t,
-          startDate: toDate(t.startDate),
-          latitude: toNum(t.latitude),
-          longitude: toNum(t.longitude),
-          status: t.status ?? 'upcoming', // default for old docs that don't have status yet
-        })) as Tournament[]
-      ),
-      shareReplay(1)
-    );
+   this.tournaments$ = (collectionData(ref, { idField: 'id' }) as Observable<any[]>).pipe(
+  map(list =>
+    list.map((t: any) => ({
+      ...t,
+      startDate: toDate(t.startDate),
+      registration: toDate(t.registration), // <-- Ensure this line is added to map registration dates!
+      latitude: toNum(t.latitude),
+      longitude: toNum(t.longitude),
+      status: t.status ?? 'upcoming',
+    })) as Tournament[]
+  ),
+  shareReplay(1)
+);
   }
 
   getAll(): Observable<Tournament[]> {

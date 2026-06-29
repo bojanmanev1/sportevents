@@ -18,7 +18,7 @@ import {
   provideNativeDateAdapter
 } from '@angular/material/core';
 import { DateAdapter } from '@angular/material/core';
-import { Firestore, collection, addDoc, serverTimestamp } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, serverTimestamp, Timestamp } from '@angular/fire/firestore';
 
 export const MK_DATE_FORMATS = {
   parse: {
@@ -32,14 +32,14 @@ export const MK_DATE_FORMATS = {
   },
 };
 
-
+// 1. UPDATED Type declaration to accept optional Date values
 type SelfRegistrationModel = {
   name: string;
   sport: string;
   discipline?: string;
   startDate: Date | null;
   location: string;
-  registration: 'Open' | 'Closed' | 'Not open yet' | '';
+  registration: Date | null; // <-- Changed type here
   fee?: number | null;
   website?: string;
   description?: string;
@@ -48,8 +48,8 @@ type SelfRegistrationModel = {
 @Component({
   selector: 'app-tournament-self-registration-dialog',
   standalone: true,
-    providers: [
-      { provide: MAT_DATE_LOCALE, useValue: 'mk-MK' },
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'mk-MK' },
     provideNativeDateAdapter(),
     { provide: MAT_DATE_FORMATS, useValue: MK_DATE_FORMATS }
   ],
@@ -76,40 +76,20 @@ export class TournamentSelfRegistrationDialog {
   sending = false;
 
   sports: string[] = [
-  'Animal Sports',
-  'Athletics',
-  'Badminton',
-  'Basketball',
-  'Billiard',
-  'Board Sports',
-  'Bowling',
-  'Combat Sports',
-  'Cycling',
-  'ESports',
-  'Football',
-  'Golf',
-  'Gymnastics',
-  'Handball',
-  'Ice Sports',
-  'Mountain Sports',
-  'Padel',
-  'Parasports',
-  'Ping Pong',
-  'Racing',
-  'Rugby',
-  'Tennis',
-  'Teqball',
-  'Volleyball',
-  'Water Sports',
-  'Weapons'
-];
+    'Animal Sports', 'Athletics', 'Badminton', 'Basketball', 'Billiard', 'Board Sports',
+    'Bowling', 'Combat Sports', 'Cycling', 'ESports', 'Football', 'Golf', 'Gymnastics',
+    'Handball', 'Ice Sports', 'Mountain Sports', 'Padel', 'Parasports', 'Ping Pong',
+    'Racing', 'Rugby', 'Tennis', 'Teqball', 'Volleyball', 'Water Sports', 'Weapons'
+  ];
+
+  // 2. UPDATED initial field defaults
   model: SelfRegistrationModel = {
     name: '',
     sport: '',
     discipline: '',
-    startDate: null as Date | null,
+    startDate: null,
     location: '',
-    registration: '',
+    registration: null, // <-- Set default value to null
     fee: null,
     website: '',
     description: '',
@@ -120,7 +100,6 @@ export class TournamentSelfRegistrationDialog {
     private snackBar: MatSnackBar,
     private dateAdapter: DateAdapter<Date>,
     private firestore: Firestore
-
   ) {
     this.dateAdapter.setLocale('mk-MK');
   }
@@ -129,55 +108,60 @@ export class TournamentSelfRegistrationDialog {
     this.dialogRef.close();
   }
 
+  // 3. UPDATED Validation requirements (checking date object is truthy)
   isValid(): boolean {
     return !!(
       this.model.name?.trim() &&
       this.model.sport &&
       this.model.startDate &&
-      this.model.location?.trim() &&
-      this.model.registration
+      this.model.location?.trim()
+      // Removed registration field check from mandatory validation rules if deadline is optional.
+      // If deadline is required, change to: && this.model.registration
     );
   }
 
-async send(): Promise<void> {
-  if (!this.isValid()) return;
+  async send(): Promise<void> {
+    if (!this.isValid()) return;
 
-  try {
-    this.sending = true;
+    try {
+      this.sending = true;
 
-    const ref = collection(this.firestore, 'selfregistrations');
+      const ref = collection(this.firestore, 'selfregistrations');
 
-    const payload = {
-      name: this.model.name.trim(),
-      sport: this.model.sport,
-      discipline: (this.model.discipline ?? '').trim(),
-      startDate: this.model.startDate,              // Date -> Firestore Timestamp automatically
-      location: this.model.location.trim(),
-      registration: this.model.registration,
-      fee: this.model.fee ?? null,
-      website: (this.model.website ?? '').trim(),
-      description: (this.model.description ?? '').trim(),
+      // 4. Transform JS Date to Firestore Timestamp if a date is selected
+      const registrationTimestamp = this.model.registration 
+        ? Timestamp.fromDate(this.model.registration) 
+        : null;
 
-      status: 'pending',                            // ✅ important for admin
-      createdAt: serverTimestamp(),                 // ✅ created time
-      source: 'public',                             // optional
-    };
+      const payload = {
+        name: this.model.name.trim(),
+        sport: this.model.sport,
+        discipline: (this.model.discipline ?? '').trim(),
+        startDate: this.model.startDate,              
+        location: this.model.location.trim(),
+        registration: registrationTimestamp,          // ✅ Sends Timestamp or null to Admin DB structure
+        fee: this.model.fee ?? null,
+        website: (this.model.website ?? '').trim(),
+        description: (this.model.description ?? '').trim(),
+        status: 'pending',                            
+        createdAt: serverTimestamp(),                 
+        source: 'public',                             
+      };
 
-    await addDoc(ref, payload);
+      await addDoc(ref, payload);
 
-    this.dialogRef.close(true);
+      this.dialogRef.close(true);
 
-    this.snackBar.open(
-      "Thanks! We’ll contact you after reviewing your registration.",
-      'OK',
-      { duration: 5000 }
-    );
-  } catch (err) {
-    console.error(err);
-    this.snackBar.open('Failed to submit. Please try again.', 'OK', { duration: 5000 });
-  } finally {
-    this.sending = false;
+      this.snackBar.open(
+        "Thanks! We’ll contact you after reviewing your registration.",
+        'OK',
+        { duration: 5000 }
+      );
+    } catch (err) {
+      console.error(err);
+      this.snackBar.open('Failed to submit. Please try again.', 'OK', { duration: 5000 });
+    } finally {
+      this.sending = false;
+    }
   }
-}
-
 }

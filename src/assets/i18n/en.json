@@ -70,5 +70,7 @@
     "noclosedtournaments":"No closed tournaments",
     "closedtournaments":"Closed tournaments",
     "noongoingtournaments":"No ongoing tournaments",
-    "ongoingtournaments":"Ongoing tournaments"
+    "ongoingtournaments":"Ongoing tournaments",
+    "remaining": "remaining",
+    "h":"h"
 }

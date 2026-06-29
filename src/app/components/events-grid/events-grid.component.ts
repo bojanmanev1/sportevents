@@ -93,32 +93,60 @@ export class EventsGridComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
 ngAfterViewInit() {
-  this.dataSource.sort = this.sort;
-  this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
 
-  this.dataSource.sortingDataAccessor = (item, property) => {
-    if (property === 'startDate') {
-      return item.startDate?.getTime?.() ?? Number.MAX_SAFE_INTEGER;
-    }
+ this.dataSource.sortingDataAccessor = (item, property) => {
+  if (property === 'startDate') {
+    return item.startDate?.getTime?.() ?? Number.MAX_SAFE_INTEGER;
+  }
 
-    if (property === 'sport') {
-      return this.i18n.key(item.sport ?? '');
-    }
+  if (property === 'sport') {
+    return this.i18n.key(item.sport ?? '');
+  }
 
-    if (property === 'registration') {
-      return this.i18n.key(item.registration ?? '');
-    }
+  if (property === 'registration') {
+    return this.getRegistrationData(item).key; 
+  }
 
-    return ((item as any)[property] ?? '').toString().toLowerCase();
-  };
+  return ((item as any)[property] ?? '').toString().toLowerCase();
+};
 
-  // default sort: closest date first
-  this.sort.active = 'startDate';
-  this.sort.direction = 'asc';
-  this.sort.sortChange.emit({
-    active: 'startDate',
-    direction: 'asc'
-  });
+    // default sort: closest date first
+    this.sort.active = 'startDate';
+    this.sort.direction = 'asc';
+    this.sort.sortChange.emit({
+      active: 'startDate',
+      direction: 'asc'
+    });
+  }
+
+
+// Add or replace this method in events-grid.component.ts
+getRegistrationData(e: Tournament): { key: string; hours?: number } {
+  const rawReg = e.registration;
+  if (!rawReg) {
+    return { key: 'Not open yet' };
+  }
+
+  const regDate = rawReg instanceof Date ? rawReg : new Date(rawReg);
+  if (isNaN(regDate.getTime())) {
+    return { key: 'Not open yet' };
+  }
+
+  const now = new Date();
+  const timeDifferenceMs = regDate.getTime() - now.getTime();
+  const hoursRemaining = Math.ceil(timeDifferenceMs / (1000 * 60 * 60));
+
+  if (hoursRemaining <= 0) {
+    return { key: 'Closed' };
+  }
+
+  if (hoursRemaining <= 48) {
+    return { key: 'OpenWithHours', hours: hoursRemaining };
+  }
+
+  return { key: 'Open' };
 }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -132,56 +160,29 @@ applyFilters() {
   const selected = this.selectedSports?.length ? this.selectedSports : ['all'];
 
   const normalizeSearch = (value: string): string => {
-      const map: Record<string, string> = {
-    а: 'a',
-    б: 'b',
-    в: 'v',
-    г: 'g',
-    д: 'd',
-    ѓ: 'g',
-    е: 'e',
-    ж: 'z',
-    з: 'z',
-    ѕ: 'dz',
-    и: 'i',
-    ј: 'j',
-    к: 'k',
-    л: 'l',
-    љ: 'l',
-    м: 'm',
-    н: 'n',
-    њ: 'n',
-    о: 'o',
-    п: 'p',
-    р: 'r',
-    с: 's',
-    т: 't',
-    ќ: 'k',
-    у: 'u',
-    ф: 'f',
-    х: 'h',
-    ц: 'c',
-    ч: 'c',
-    џ: 'dz',
-    ш: 's'
-  };
+    const map: Record<string, string> = {
+      а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', ѓ: 'g', е: 'e', ж: 'z', з: 'z',
+      ѕ: 'dz', и: 'i', ј: 'j', к: 'k', л: 'l', љ: 'l', м: 'm', н: 'n', њ: 'n',
+      о: 'o', п: 'p', р: 'r', с: 's', т: 't', ќ: 'k', у: 'u', ф: 'f', х: 'h',
+      ц: 'c', ч: 'c', џ: 'dz', ш: 's'
+    };
 
-   return (value ?? '')
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/kj/g, 'k')
-    .replace(/gj/g, 'g')
-    .replace(/ch/g, 'c')
-    .replace(/sh/g, 's')
-    .replace(/zh/g, 'z')
-    .replace(/lj/g, 'l')
-    .replace(/nj/g, 'n')
-    .split('')
-    .map(ch => map[ch] ?? ch)
-    .join('')
-    .replace(/\s+/g, ' ')
-    .trim();
+    return (value ?? '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/kj/g, 'k')
+      .replace(/gj/g, 'g')
+      .replace(/ch/g, 'c')
+      .replace(/sh/g, 's')
+      .replace(/zh/g, 'z')
+      .replace(/lj/g, 'l')
+      .replace(/nj/g, 'n')
+      .split('')
+      .map(ch => map[ch] ?? ch)
+      .join('')
+      .replace(/\s+/g, ' ')
+      .trim();
   };
 
   // 1. Sport filter from top menu
@@ -201,14 +202,16 @@ applyFilters() {
         ? e.startDate.toLocaleDateString('mk-MK')
         : '';
 
+      // Get the calculated human-readable status string for indexing search queries
+      const currentRegStatus = this.getRegistrationData(e);
+
       const searchable = normalizeSearch(
         (e.name ?? '') + ' ' +
         (e.sport ?? '') + ' ' +
         (e.discipline ?? '') + ' ' +
         (e.location ?? '') + ' ' +
-        (e.registration ?? '') + ' ' +
+        currentRegStatus + ' ' +
         this.i18n.key(e.sport ?? '') + ' ' +
-        this.i18n.key(e.registration ?? '') + ' ' +
         startDateText
       );
 
@@ -232,11 +235,23 @@ applyFilters() {
     );
   }
 
-  // 5. Registration filter
+  // 5. Updated Registration Filter (Handles new dynamic string definitions)
   if (this.registrationFilter !== 'all') {
-    list = list.filter(e =>
-      this.i18n.key(e.registration ?? '') === this.registrationFilter
-    );
+    list = list.filter(e => {
+      const status = this.getRegistrationData(e).key.toLowerCase();
+      
+      if (this.registrationFilter === 'open') {
+        // Matches standard "Open" and urgent states containing "remaining"
+        return status.includes('open');
+      }
+      if (this.registrationFilter === 'closed') {
+        return status === 'closed';
+      }
+      if (this.registrationFilter === 'notopenyet') {
+        return status === 'not open yet';
+      }
+      return true;
+    });
   }
 
   // 6. Date from

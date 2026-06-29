@@ -41,14 +41,17 @@
       <input matInput [(ngModel)]="model.location" name="location" required />
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>{{"registration" | translate}}</mat-label>
-      <mat-select [(ngModel)]="model.registration" name="registration" required>
-        <mat-option value="Open">{{"open" | translate}}</mat-option>
-        <mat-option value="Closed">{{"closed" | translate}}</mat-option>
-        <mat-option value="Not open yet">{{"notopenyet" | translate}}</mat-option>
-      </mat-select>
-    </mat-form-field>
+   <mat-form-field appearance="outline">
+  <mat-label>{{ "registration" | translate }}</mat-label>
+  <input
+    matInput
+    [matDatepicker]="regPicker"
+    [(ngModel)]="model.registration"
+    name="registration"
+  />
+  <mat-datepicker-toggle matIconSuffix [for]="regPicker"></mat-datepicker-toggle>
+  <mat-datepicker #regPicker></mat-datepicker>
+</mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>{{"fee" | translate}}</mat-label>
