@@ -52,7 +52,8 @@ import { I18nService } from '../../services/i18n.service';
 })
 export class EventsGridComponent implements OnInit, AfterViewInit, OnChanges {
   allTournaments: Tournament[] = [];
-
+countdowns: Record<string, string> = {}; 
+  private timerIntervalId: any;
   constructor(
     private dialog: MatDialog,
     private svc: TournamentService,
@@ -84,74 +85,99 @@ export class EventsGridComponent implements OnInit, AfterViewInit, OnChanges {
 
   dataSource = new MatTableDataSource<Tournament>([]);
 
-  ngOnInit() {
+ngOnInit() {
     this.svc.getUpcoming().subscribe(tournaments => {
       this.allTournaments = tournaments;
       this.dataSource.data = tournaments;
       this.applyFilters();
+      this.startLiveCountdownLoop(); // Fire loop
     });
   }
+
+private startLiveCountdownLoop() {
+    if (this.timerIntervalId) clearInterval(this.timerIntervalId);
+
+    const updateTimers = () => {
+      const now = new Date().getTime();
+      
+      this.allTournaments.forEach(e => {
+        if (!e.id || !e.registration) return;
+        
+        const regDate = e.registration instanceof Date ? e.registration : new Date(e.registration);
+        const targetTime = regDate.getTime();
+        const diff = targetTime - now;
+
+        if (diff > 0 && diff <= 48 * 60 * 60 * 1000) {
+          const totalSeconds = Math.floor(diff / 1000);
+          const hrs = Math.floor(totalSeconds / 3600);
+          const mins = Math.floor((totalSeconds % 3600) / 60);
+          const secs = totalSeconds % 60;
+
+          // Padding numbers (e.g. 4:9:3 -> 04:09:03)
+          const pad = (num: number) => num.toString().padStart(2, '0');
+          this.countdowns[e.id] = `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+        } else {
+          delete this.countdowns[e.id];
+        }
+      });
+    };
+
+    updateTimers(); // Immediate baseline execution
+    this.timerIntervalId = setInterval(updateTimers, 1000);
+  }
+  
 
 ngAfterViewInit() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
 
- this.dataSource.sortingDataAccessor = (item, property) => {
-  if (property === 'startDate') {
-    return item.startDate?.getTime?.() ?? Number.MAX_SAFE_INTEGER;
-  }
+    this.dataSource.sortingDataAccessor = (item, property) => {
+      if (property === 'startDate') {
+        return item.startDate?.getTime?.() ?? Number.MAX_SAFE_INTEGER;
+      }
+      if (property === 'sport') {
+        return this.i18n.key(item.sport ?? '');
+      }
+      if (property === 'registration') {
+        return this.getRegistrationData(item).key; 
+      }
+      return ((item as any)[property] ?? '').toString().toLowerCase();
+    };
 
-  if (property === 'sport') {
-    return this.i18n.key(item.sport ?? '');
-  }
-
-  if (property === 'registration') {
-    return this.getRegistrationData(item).key; 
-  }
-
-  return ((item as any)[property] ?? '').toString().toLowerCase();
-};
-
-    // default sort: closest date first
     this.sort.active = 'startDate';
     this.sort.direction = 'asc';
-    this.sort.sortChange.emit({
-      active: 'startDate',
-      direction: 'asc'
-    });
+    this.sort.sortChange.emit({ active: 'startDate', direction: 'asc' });
   }
 
 
 // Add or replace this method in events-grid.component.ts
 getRegistrationData(e: Tournament): { key: string; hours?: number } {
-  const rawReg = e.registration;
-  if (!rawReg) {
-    return { key: 'Not open yet' };
+    const rawReg = e.registration;
+    if (!rawReg) return { key: 'Not open yet' };
+
+    const regDate = rawReg instanceof Date ? rawReg : new Date(rawReg);
+    if (isNaN(regDate.getTime())) return { key: 'Not open yet' };
+
+    const now = new Date();
+    const timeDifferenceMs = regDate.getTime() - now.getTime();
+    const hoursRemaining = Math.ceil(timeDifferenceMs / (1000 * 60 * 60));
+
+    if (hoursRemaining <= 0) return { key: 'Closed' };
+    if (hoursRemaining <= 48) return { key: 'OpenWithHours', hours: hoursRemaining };
+
+    return { key: 'Open' };
   }
 
-  const regDate = rawReg instanceof Date ? rawReg : new Date(rawReg);
-  if (isNaN(regDate.getTime())) {
-    return { key: 'Not open yet' };
-  }
-
-  const now = new Date();
-  const timeDifferenceMs = regDate.getTime() - now.getTime();
-  const hoursRemaining = Math.ceil(timeDifferenceMs / (1000 * 60 * 60));
-
-  if (hoursRemaining <= 0) {
-    return { key: 'Closed' };
-  }
-
-  if (hoursRemaining <= 48) {
-    return { key: 'OpenWithHours', hours: hoursRemaining };
-  }
-
-  return { key: 'Open' };
-}
-
-  ngOnChanges(changes: SimpleChanges) {
+ ngOnChanges(changes: SimpleChanges) {
     if (changes['selectedSports']) {
       this.applyFilters();
+    }
+  }
+
+
+  ngOnDestroy() {
+    if (this.timerIntervalId) {
+      clearInterval(this.timerIntervalId);
     }
   }
 

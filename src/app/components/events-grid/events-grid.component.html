@@ -86,7 +86,7 @@
       [class.urgent]="res.key === 'OpenWithHours'"
     >
       @if (res.key === 'OpenWithHours') {
-        {{ 'open' | translate }} ( {{ 'remaining' | translate }} {{ res.hours }}{{'h' | translate}} )
+         {{ countdowns[e.id || ''] || '--:--:--' }}
       } @else {
         {{ i18n.key(res.key) | translate }}
       }
