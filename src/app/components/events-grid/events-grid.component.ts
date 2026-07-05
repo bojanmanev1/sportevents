@@ -95,36 +95,42 @@ ngOnInit() {
   }
 
 private startLiveCountdownLoop() {
-    if (this.timerIntervalId) clearInterval(this.timerIntervalId);
+  if (this.timerIntervalId) clearInterval(this.timerIntervalId);
 
-    const updateTimers = () => {
-      const now = new Date().getTime();
+  const updateTimers = () => {
+    const now = new Date().getTime();
+    
+    this.allTournaments.forEach(e => {
+      if (!e.id || !e.registration) return;
       
-      this.allTournaments.forEach(e => {
-        if (!e.id || !e.registration) return;
-        
-        const regDate = e.registration instanceof Date ? e.registration : new Date(e.registration);
-        const targetTime = regDate.getTime();
-        const diff = targetTime - now;
+      // 1. Parse the incoming registration date reference safely
+      const regDate = e.registration instanceof Date ? e.registration : new Date(e.registration);
+      
+      // 2. FORCE the target time to the end of that specific day (23:59:59.999)
+      const endOfDayDate = new Date(regDate);
+      endOfDayDate.setHours(23, 59, 59, 999);
+      
+      const targetTime = endOfDayDate.getTime();
+      const diff = targetTime - now;
 
-        if (diff > 0 && diff <= 48 * 60 * 60 * 1000) {
-          const totalSeconds = Math.floor(diff / 1000);
-          const hrs = Math.floor(totalSeconds / 3600);
-          const mins = Math.floor((totalSeconds % 3600) / 60);
-          const secs = totalSeconds % 60;
+      // 3. Keep the 48-hour visibility threshold intact relative to the adjusted end-of-day target
+      if (diff > 0 && diff <= 48 * 60 * 60 * 1000) {
+        const totalSeconds = Math.floor(diff / 1000);
+        const hrs = Math.floor(totalSeconds / 3600);
+        const mins = Math.floor((totalSeconds % 3600) / 60);
+        const secs = totalSeconds % 60;
 
-          // Padding numbers (e.g. 4:9:3 -> 04:09:03)
-          const pad = (num: number) => num.toString().padStart(2, '0');
-          this.countdowns[e.id] = `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
-        } else {
-          delete this.countdowns[e.id];
-        }
-      });
-    };
+        const pad = (num: number) => num.toString().padStart(2, '0');
+        this.countdowns[e.id] = `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
+      } else {
+        delete this.countdowns[e.id];
+      }
+    });
+  };
 
-    updateTimers(); // Immediate baseline execution
-    this.timerIntervalId = setInterval(updateTimers, 1000);
-  }
+  updateTimers(); // Run once immediately on initialization
+  this.timerIntervalId = setInterval(updateTimers, 1000);
+}
   
 
 ngAfterViewInit() {
