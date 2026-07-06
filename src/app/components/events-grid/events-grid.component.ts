@@ -86,34 +86,40 @@ countdowns: Record<string, string> = {};
   dataSource = new MatTableDataSource<Tournament>([]);
 
 ngOnInit() {
-    this.svc.getUpcoming().subscribe(tournaments => {
-      this.allTournaments = tournaments;
-      this.dataSource.data = tournaments;
-      this.applyFilters();
-      this.startLiveCountdownLoop(); // Fire loop
-    });
-  }
+  this.svc.getUpcoming().subscribe(tournaments => {
+    this.allTournaments = tournaments;
+    this.dataSource.data = tournaments;
+
+    // Set defaults safely before the view locks in the check pass
+    if (this.sort) {
+      this.sort.active = 'startDate';
+      this.sort.direction = 'asc';
+    }
+
+    this.applyFilters();
+    this.startLiveCountdownLoop();
+  });
+}
 
 private startLiveCountdownLoop() {
   if (this.timerIntervalId) clearInterval(this.timerIntervalId);
 
   const updateTimers = () => {
     const now = new Date().getTime();
+    // Create a shallow copy to trigger Angular's change detection properly
+    const nextCountdowns: Record<string, string> = {}; 
     
     this.allTournaments.forEach(e => {
+      // NOTE: If your backend uses '_id', change 'e.id' to 'e._id' below
       if (!e.id || !e.registration) return;
       
-      // 1. Parse the incoming registration date reference safely
       const regDate = e.registration instanceof Date ? e.registration : new Date(e.registration);
-      
-      // 2. FORCE the target time to the end of that specific day (23:59:59.999)
       const endOfDayDate = new Date(regDate);
       endOfDayDate.setHours(23, 59, 59, 999);
       
       const targetTime = endOfDayDate.getTime();
       const diff = targetTime - now;
 
-      // 3. Keep the 48-hour visibility threshold intact relative to the adjusted end-of-day target
       if (diff > 0 && diff <= 48 * 60 * 60 * 1000) {
         const totalSeconds = Math.floor(diff / 1000);
         const hrs = Math.floor(totalSeconds / 3600);
@@ -121,58 +127,70 @@ private startLiveCountdownLoop() {
         const secs = totalSeconds % 60;
 
         const pad = (num: number) => num.toString().padStart(2, '0');
-        this.countdowns[e.id] = `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
-      } else {
-        delete this.countdowns[e.id];
+        nextCountdowns[e.id] = `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
       }
     });
+
+    this.countdowns = nextCountdowns;
   };
 
-  updateTimers(); // Run once immediately on initialization
+  updateTimers(); 
   this.timerIntervalId = setInterval(updateTimers, 1000);
 }
   
 
 ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
+  this.dataSource.sort = this.sort;
+  this.dataSource.paginator = this.paginator;
 
-    this.dataSource.sortingDataAccessor = (item, property) => {
-      if (property === 'startDate') {
-        return item.startDate?.getTime?.() ?? Number.MAX_SAFE_INTEGER;
-      }
-      if (property === 'sport') {
-        return this.i18n.key(item.sport ?? '');
-      }
-      if (property === 'registration') {
-        return this.getRegistrationData(item).key; 
-      }
-      return ((item as any)[property] ?? '').toString().toLowerCase();
-    };
+  this.dataSource.sortingDataAccessor = (item, property) => {
+    if (property === 'startDate') {
+      return item.startDate?.getTime?.() ?? Number.MAX_SAFE_INTEGER;
+    }
+    if (property === 'sport') {
+      return this.i18n.key(item.sport ?? '');
+    }
+    if (property === 'registration') {
+      return this.getRegistrationData(item).key; 
+    }
+    return ((item as any)[property] ?? '').toString().toLowerCase();
+  };
 
-    this.sort.active = 'startDate';
-    this.sort.direction = 'asc';
-    this.sort.sortChange.emit({ active: 'startDate', direction: 'asc' });
-  }
+  // REMOVE the programmatic sort assignment and emission from here!
+}
 
 
 // Add or replace this method in events-grid.component.ts
 getRegistrationData(e: Tournament): { key: string; hours?: number } {
-    const rawReg = e.registration;
-    if (!rawReg) return { key: 'Not open yet' };
+  const rawReg = e.registration;
+  if (!rawReg) return { key: 'Not open yet' };
 
-    const regDate = rawReg instanceof Date ? rawReg : new Date(rawReg);
-    if (isNaN(regDate.getTime())) return { key: 'Not open yet' };
-
-    const now = new Date();
-    const timeDifferenceMs = regDate.getTime() - now.getTime();
-    const hoursRemaining = Math.ceil(timeDifferenceMs / (1000 * 60 * 60));
-
-    if (hoursRemaining <= 0) return { key: 'Closed' };
-    if (hoursRemaining <= 48) return { key: 'OpenWithHours', hours: hoursRemaining };
-
-    return { key: 'Open' };
+  // Convert to date object safely (supports Firestore timestamps or raw strings)
+  let regDate: Date;
+  if (typeof (rawReg as any).toDate === 'function') {
+    regDate = (rawReg as any).toDate();
+  } else {
+    regDate = new Date(rawReg);
   }
+
+  if (isNaN(regDate.getTime())) return { key: 'Not open yet' };
+
+  // --- FORCE the evaluation to use the end of that specific day ---
+  const endOfDeadlineDay = new Date(regDate);
+  endOfDeadlineDay.setHours(23, 59, 59, 999);
+
+  const now = new Date();
+  const timeDifferenceMs = endOfDeadlineDay.getTime() - now.getTime();
+  const hoursRemaining = Math.ceil(timeDifferenceMs / (1000 * 60 * 60));
+
+  // If the entire day has fully passed, it's officially closed
+  if (hoursRemaining <= 0) return { key: 'Closed' };
+  
+  // If we are within the 48-hour window (including today), flag it for the countdown string
+  if (hoursRemaining <= 48) return { key: 'OpenWithHours', hours: hoursRemaining };
+
+  return { key: 'Open' };
+}
 
  ngOnChanges(changes: SimpleChanges) {
     if (changes['selectedSports']) {
