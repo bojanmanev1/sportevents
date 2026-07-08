@@ -105,12 +105,11 @@ private startLiveCountdownLoop() {
   if (this.timerIntervalId) clearInterval(this.timerIntervalId);
 
   const updateTimers = () => {
-    const now = new Date().getTime();
-    // Create a shallow copy to trigger Angular's change detection properly
+    // --- UPDATED: Uses Macedonian Time instead of local device time ---
+    const now = this.getMacedonianNowTime();
     const nextCountdowns: Record<string, string> = {}; 
     
     this.allTournaments.forEach(e => {
-      // NOTE: If your backend uses '_id', change 'e.id' to 'e._id' below
       if (!e.id || !e.registration) return;
       
       const regDate = e.registration instanceof Date ? e.registration : new Date(e.registration);
@@ -159,13 +158,19 @@ ngAfterViewInit() {
   // REMOVE the programmatic sort assignment and emission from here!
 }
 
+private getMacedonianNowTime(): number {
+  const now = new Date();
+  // Format the current global time into Macedonia's time zone explicitly
+  const tzString = now.toLocaleString('en-US', { timeZone: 'Europe/Skopje' });
+  return new Date(tzString).getTime();
+}
+
 
 // Add or replace this method in events-grid.component.ts
 getRegistrationData(e: Tournament): { key: string; hours?: number } {
   const rawReg = e.registration;
   if (!rawReg) return { key: 'Not open yet' };
 
-  // Convert to date object safely (supports Firestore timestamps or raw strings)
   let regDate: Date;
   if (typeof (rawReg as any).toDate === 'function') {
     regDate = (rawReg as any).toDate();
@@ -175,18 +180,15 @@ getRegistrationData(e: Tournament): { key: string; hours?: number } {
 
   if (isNaN(regDate.getTime())) return { key: 'Not open yet' };
 
-  // --- FORCE the evaluation to use the end of that specific day ---
   const endOfDeadlineDay = new Date(regDate);
   endOfDeadlineDay.setHours(23, 59, 59, 999);
 
-  const now = new Date();
-  const timeDifferenceMs = endOfDeadlineDay.getTime() - now.getTime();
+  // --- UPDATED: Calculates remaining hours using Macedonian Time ---
+  const now = this.getMacedonianNowTime();
+  const timeDifferenceMs = endOfDeadlineDay.getTime() - now;
   const hoursRemaining = Math.ceil(timeDifferenceMs / (1000 * 60 * 60));
 
-  // If the entire day has fully passed, it's officially closed
   if (hoursRemaining <= 0) return { key: 'Closed' };
-  
-  // If we are within the 48-hour window (including today), flag it for the countdown string
   if (hoursRemaining <= 48) return { key: 'OpenWithHours', hours: hoursRemaining };
 
   return { key: 'Open' };
